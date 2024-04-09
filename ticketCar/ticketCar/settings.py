@@ -16,6 +16,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 AUTH_USER_MODEL = "myService.User"
+MEDIA_ROOT = '%s/myService/static/' % BASE_DIR
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -23,10 +24,27 @@ AUTH_USER_MODEL = "myService.User"
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-@2p0fsn$mtuj*ay-^1p-4gos%7#6xwvkd727!%rc(s25r3iq8@'
 
+import cloudinary
+
+cloudinary.config(
+    cloud_name="dtoc5lqfe",
+    api_key="346556316858336",
+    api_secret="ijP4MyTWOXI-behy-Z3TUso5UAA"
+)
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+    )
+}
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+CKEDITOR_UPLOAD_PATH = "images/ticketCar/"
 
 # Application definition
 
@@ -38,6 +56,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myService.apps.MyserviceConfig',
+    'ckeditor',
+    'ckeditor_uploader',
+    'cloudinary',
+    'rest_framework',
+    'drf_yasg',
+    'oauth2_provider',
 ]
 
 MIDDLEWARE = [
