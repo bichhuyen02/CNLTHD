@@ -45,14 +45,14 @@ class CarViewSet(viewsets.ViewSet, generics.ListAPIView):
             queries = queries.filter(licensePlates__icontains=q)
         return queries
 
-    @action(methods=['get'],detail=True)
+    @action(methods=['get'], detail=True)
     def chair(self, request, pk):
         l = self.get_object().chair_set.all()
         return Response(ChairSerializer(l, many=True, context={
             'request': request
         }).data, status=status.HTTP_200_OK)
 
-class ChairViewSet(viewsets.ViewSet, generics.UpdateAPIView):
+class ChairViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = Chair.objects.all()
     serializer_class = ChairSerializer
     # permission_classes = [permissions.AllowAny()]
@@ -69,14 +69,14 @@ class ChairViewSet(viewsets.ViewSet, generics.UpdateAPIView):
     #         return [permissions.IsAuthenticated()]
     #     return self.permission_classes
     #
-    @action(methods=['patch'], url_path="chair", detail=True)
-    def update_active(self, request, pk):
-        chair = Chair.objects.update(active=False)
-        chair.save()
-
-        return Response(ChairSerializer(chair, context={
-            'request': request
-        }).data, status=status.HTTP_201_CREATED)
+    # @action(methods=['patch'], detail=True)
+    # def update_active(self, request, pk):
+    #     chair = Chair.objects.update(active=False)
+    #     chair.save()
+    #
+    #     return Response(ChairSerializer(chair, context={
+    #         'request': request
+    #     }).data, status=status.HTTP_201_CREATED)
     #
     # @action(methods=['post'], url_path='like', detail=True)
     # def like(self, request, pk):

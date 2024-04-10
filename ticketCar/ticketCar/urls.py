@@ -39,8 +39,8 @@ schema_view = get_schema_view(
 router = routers.DefaultRouter()
 router.register('categories', views.CategoryViewSet, basename='categories')
 router.register('cars', views.CarViewSet, basename='cars')
-# router.register('lessons', views.LessonViewSet, basename='lessons')
-# router.register('users', views.UserViewSet, basename='users')
+router.register('Chairs', views.ChairViewSet, basename='chairs')
+router.register('priceT', views.PriceTViewSet, basename='priceT')
 # router.register('comments', views.CommentViewSet, basename='comments')
 
 urlpatterns = [

@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="47fb0c1c-cc5d-4ecc-a5f6-7bd90b0cd01b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/ticketCar/myService/perms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ticketCar/myService/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/myService/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ticketCar/myService/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ticketCar/myService/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/myService/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ticketCar/myService/paginator.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/myService/paginator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ticketCar/myService/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/myService/serializers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ticketCar/myService/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/myService/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ticketCar/ticketCar/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/ticketCar/urls.py" afterDir="false" />
     </list>
@@ -19,6 +15,13 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -26,6 +29,9 @@
   &quot;associatedIndex&quot;: 1
 }</component>
   <component name="ProjectId" id="2erqs0q15u7Y6B82qhzm1zmJtJW" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
