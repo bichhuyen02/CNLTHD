@@ -3,7 +3,7 @@
 - pip install -r requerements.txt
 - python manage.py migrate
 2. Chuyển nhánh:
-- git branch(kiểm tra nhánh)
+- git branch (kiểm tra nhánh)
 - git checkout <tên nhánh> (chuyển nhánh)
 3. Push (CMD git):
 - git status
