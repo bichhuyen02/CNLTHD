@@ -7,7 +7,7 @@ from django.db.models import Count
 from django.template.response import TemplateResponse
 from django.utils.safestring import mark_safe
 
-from .models import Xe, LoaiXe, Ghe, GiaVe, BenXe, ChuyenXe, User, NhanVien, KhachHang, Complain
+from .models import Car, Customer, Category, Complain, Chair, Staff, BStation, PriceT, Trip, Driver,User
 # Register your models here.
 
 
@@ -49,15 +49,15 @@ class AppAdminSite(admin.AdminSite):
 
 
 #xe
-class LoaiXeAdmin(admin.ModelAdmin):
+class CategoryAdmin(admin.ModelAdmin):
     list_display = ['id', 'name']
     search_fields = ['name']
     list_filter = ['id', 'name']
 
-class XeAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'bienSo']
-    search_fields = ['name']
-    list_filter = ['id', 'bienSo']
+class CarAdmin(admin.ModelAdmin):
+    list_display = ['id', 'licensePlates', 'category', 'active']
+    search_fields = ['id', 'licensePlates', 'active']
+    list_filter = ['id', 'licensePlates']
     # form = CourseForm
     # inlines = [XeTagInlineAdmin]
     readonly_fields = ['ava']
@@ -72,7 +72,7 @@ class XeAdmin(admin.ModelAdmin):
                     .format(url=obj.image.name)
             )
 
-class GheAdmin(admin.ModelAdmin):
+class ChairAdmin(admin.ModelAdmin):
     list_display = ['id', 'name']
     search_fields = ['name']
     list_filter = ['id', 'name']
@@ -80,10 +80,10 @@ class GheAdmin(admin.ModelAdmin):
 
 
 #ve
-class GiaVeAdmin(admin.ModelAdmin):
-    list_display = ['id', 'loai']
-    search_fields = ['loai']
-    list_filter = ['id', 'loai']
+class PriceTAdmin(admin.ModelAdmin):
+    list_display = ['id', 'date_cate']
+    search_fields = ['date_cate']
+    list_filter = ['id', 'date_cate']
     # form = LessonForm
     # inlines = [LessonTagInlineAdmin]
 
@@ -93,17 +93,16 @@ class VeAdmin(admin.ModelAdmin):
 
 
 
-
 #chuyen xe
-class BenXeAdmin(admin.ModelAdmin):
+class BStationAdmin(admin.ModelAdmin):
     list_display = ['id', 'name']
     search_fields = ['name']
     list_filter = ['id', 'name']
 
-class ChuyenXeAdmin(admin.ModelAdmin):
-    list_display = ['id', 'gioXP', 'ngayXP']
-    search_fields = ['gioXP', 'ngayXP']
-    list_filter = ['gioXP', 'ngayXP']
+class TripAdmin(admin.ModelAdmin):
+    list_display = ['id', 'timeGo', 'dateGo']
+    search_fields = ['timeGo', 'dateGo']
+    list_filter = ['timeGo', 'dateGo']
 
 
 
@@ -114,21 +113,21 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ['username', 'lastname']
     list_filter = ['username', 'lastname']
 
-class KhachHangAdmin(admin.ModelAdmin):
+class CustomerAdmin(admin.ModelAdmin):
     list_display = ['id', 'phone', 'birt', 'user']
     search_fields = ['phone']
     list_filter = ['phone']
 
-class NhanVienAdmin(admin.ModelAdmin):
+class StaffAdmin(admin.ModelAdmin):
     list_display = ['id', 'phone', 'birt', 'user']
     search_fields = ['phone']
     list_filter = ['phone']
 
-class TaiXeAdmin(admin.ModelAdmin):
+class DriverAdmin(admin.ModelAdmin):
     list_display = ['id', 'phone', 'birt', 'user']
     search_fields = ['phone']
     list_filter = ['phone']
-    readonly_fields = ['bangLai']
+    readonly_fields = ['license']
 
     class Media:
         css = {
@@ -139,18 +138,20 @@ class TaiXeAdmin(admin.ModelAdmin):
         if obj:
             return mark_safe(
                 '<img src="/static/{url}" width="120" />' \
-                    .format(url=obj.bangLai.name)
+                    .format(url=obj.license.name)
             )
 
 admin_site = AppAdminSite(name='Quản lý bán vé')
 
-admin_site.register(Xe)
-admin_site.register(LoaiXe)
-admin_site.register(Ghe)
+admin_site.register(Car, CarAdmin)
+admin_site.register(Category, CategoryAdmin)
+admin_site.register(Chair, ChairAdmin)
 # admin_site.register(GiaVe)
-admin_site.register(BenXe)
-admin_site.register(ChuyenXe)
-admin_site.register(NhanVien)
-admin_site.register(KhachHang)
+admin_site.register(BStation)
+admin_site.register(Trip)
+admin_site.register(Staff)
+admin_site.register(Customer)
 admin_site.register(Complain)
 admin_site.register(User)
+admin_site.register(Driver)
+admin_site.register(PriceT)

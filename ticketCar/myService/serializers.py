@@ -1,17 +1,17 @@
-from .models import Xe, LoaiXe, Ghe, GiaVe, BenXe, ChuyenXe, User, NhanVien, KhachHang, Complain
+from .models import Car, Customer, Category, Complain, Chair, Staff, BStation, PriceT, Trip, Driver,User
 from rest_framework import serializers
 
 
 
 
 #xe
-class LoaiXeSerializer(serializers.ModelSerializer):
+class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = LoaiXe
+        model = Category
         fields = ['id', 'name', 'active']
 
-class XeSerializer(serializers.ModelSerializer):
+class CarSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField(source='image')
     # loaiXe = LoaiXeSerializer()
 
@@ -24,25 +24,25 @@ class XeSerializer(serializers.ModelSerializer):
 
 
     class Meta:
-        model = Xe
-        fields = ['id', 'name', 'bienSo', 'loaiXe', 'image', 'active']
+        model = Car
+        fields = ['id', 'licensePlates', 'category', 'image', 'active']
 
-class GheSerializer(serializers.ModelSerializer):
+class ChairSerializer(serializers.ModelSerializer):
     # xe = XeSerializer()
     class Meta:
-        model = Ghe
-        fields = ['id', 'name', 'xe', 'active']
+        model = Chair
+        fields = ['id', 'name', 'car', 'active']
 
 
 
 #ve
-class GiaVeSerializer(serializers.ModelSerializer):
+class PriceTSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = GiaVe
-        fields = ['id', 'gia', 'loai', 'active']
+        model = PriceT
+        fields = ['id', 'price', 'date_cate', 'active']
 
-class VeSerializer(serializers.ModelSerializer):
+class TicketSerializer(serializers.ModelSerializer):
     pass
     # class Meta:
     #     model = GiaVe
@@ -51,16 +51,16 @@ class VeSerializer(serializers.ModelSerializer):
 
 
 #chuyen xe
-class BenXeSerializer(serializers.ModelSerializer):
+class BStationSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = BenXe
+        model = BStation
         fields = ['id', 'name', 'description', 'active']
 
-class ChuyenXeSerializer(serializers.ModelSerializer):
+class TripSerializer(serializers.ModelSerializer):
     # diemDen = TagSerializer(many=True)
     class Meta:
-        model = ChuyenXe
+        model = Trip
         fields = '__all__'
 
 
@@ -75,7 +75,7 @@ class UserSerializer(serializers.ModelSerializer):
             }
         }
         model = User
-        fields = ['first_name', 'last_name', 'email', 'username', 'password', 'avatar']
+        fields = ['first_name', 'last_name', 'email', 'username', 'password', 'avatar', 'role']
 
     def create(self, validated_data):
         data = validated_data.copy()
@@ -85,13 +85,13 @@ class UserSerializer(serializers.ModelSerializer):
 
         return user
 
-class NhanVienSerializer(serializers.ModelSerializer):
+class StaffSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = NhanVien
+        model = Staff
         fields = ['birth', 'phone', 'user']
 
-class TaiXeSerializer(serializers.ModelSerializer):
+class DriverSerializer(serializers.ModelSerializer):
     bangLai = serializers.SerializerMethodField(source='image')
 
     def get_image(self, obj):
@@ -103,13 +103,13 @@ class TaiXeSerializer(serializers.ModelSerializer):
 
 
     class Meta:
-        model = NhanVien
+        model = Driver
         fields = ['birth', 'phone', 'user', 'bangLai']
 
-class KhachHangSerializer(serializers.ModelSerializer):
+class CustomerSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = KhachHang
+        model = Customer
         fields = ['birth', 'phone', 'user']
 
 

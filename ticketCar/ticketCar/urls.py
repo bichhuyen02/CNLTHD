@@ -37,8 +37,8 @@ schema_view = get_schema_view(
 )
 
 router = routers.DefaultRouter()
-# router.register('categories', views.CategoryViewSet, basename='categories')
-# router.register('courses', views.CourseViewSet, basename='courses')
+router.register('categories', views.CategoryViewSet, basename='categories')
+router.register('cars', views.CarViewSet, basename='cars')
 # router.register('lessons', views.LessonViewSet, basename='lessons')
 # router.register('users', views.UserViewSet, basename='users')
 # router.register('comments', views.CommentViewSet, basename='comments')
@@ -46,11 +46,17 @@ router = routers.DefaultRouter()
 urlpatterns = [
     path('', include(router.urls)),
 
+
+
     path('admin/', admin_site.urls),
+
+
 
 
     re_path(r'^ckeditor/',
             include('ckeditor_uploader.urls')),
+
+
 
 
     re_path(r'^swagger(?P<format>\.json|\.yaml)$',

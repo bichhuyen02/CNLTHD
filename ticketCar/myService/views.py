@@ -3,59 +3,80 @@ from django.shortcuts import render
 from django.views import View
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .models import Xe, LoaiXe, Ghe, GiaVe, BenXe, ChuyenXe, User, NhanVien, KhachHang, Complain, TaiXe
+from .models import Car, Customer, Category, Complain, Chair, Staff, BStation, PriceT, Trip, Driver,User
 from rest_framework import viewsets, generics, status, permissions, parsers
-from .paginator import CoursePaginator
+from .paginator import CoursePaginator, ChairPaginator
 # from . import perms
-from .serializers import LoaiXeSerializer, XeSerializer, GheSerializer, GiaVeSerializer, BenXeSerializer, \
-    ChuyenXeSerializer, UserSerializer, TaiXeSerializer, KhachHangSerializer, NhanVienSerializer, ComplainSerializer
+from .serializers import CategorySerializer, CarSerializer, ChairSerializer, PriceTSerializer, BStationSerializer, \
+    TripSerializer, UserSerializer, DriverSerializer, CustomerSerializer, StaffSerializer, ComplainSerializer
 
 
 
 
+# xe
+class CategoryViewSet(viewsets.ViewSet, generics.ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
 
-#xe
-class LoaiXeViewSet(viewsets.ViewSet, generics.ListAPIView):
-    queryset = LoaiXe.objects.all()
-    serializer_class = LoaiXeSerializer
+    def get_queryset(self):
+        queries = self.queryset
+        q = self.request.query_params.get('q')
+        if q:
+            queries = queries.filter(name__icontains=q)
+        return queries
 
-class XeViewSet(viewsets.ViewSet, generics.ListAPIView):
-    queryset = Xe.objects.all()
-    serializer_class = XeSerializer
+    @action(methods=['get'], detail=True)
+    def xe(self, request, pk):
+        l = self.get_object().car_set.all()
+        return Response(CarSerializer(l, many=True, context={
+            'request': request
+        }).data, status=status.HTTP_200_OK)
+
+class CarViewSet(viewsets.ViewSet, generics.ListAPIView):
+    queryset = Car.objects.all()
+    serializer_class = CarSerializer
+
     # pagination_class = CoursePaginator
     # permission_classes = [permissions.IsAuthenticated]
-    # def get_queryset(self):
-    #     queries = self.queryset
-    #     q = self.request.query_params.get('q')
-    #     if q:
-    #         queries = queries.filter(subject__icontains=q)
-    #     return queries
-    #
-    # @action(methods=['get'],detail=True)
-    # def lessons(self, request, pk):
-    #     l = self.get_object().lesson_set.all()
-    #     return Response(LessonSerializer(l, many=True, context={
-    #         'request': request
-    #     }).data, status=status.HTTP_200_OK)
+    def get_queryset(self):
+        queries = self.queryset
+        q = self.request.query_params.get('q')
+        if q:
+            queries = queries.filter(licensePlates__icontains=q)
+        return queries
 
-class GheViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
-    queryset = Ghe.objects.all()
-    serializer_class = GheSerializer
+    @action(methods=['get'],detail=True)
+    def chair(self, request, pk):
+        l = self.get_object().chair_set.all()
+        return Response(ChairSerializer(l, many=True, context={
+            'request': request
+        }).data, status=status.HTTP_200_OK)
+
+class ChairViewSet(viewsets.ViewSet, generics.UpdateAPIView):
+    queryset = Chair.objects.all()
+    serializer_class = ChairSerializer
     # permission_classes = [permissions.AllowAny()]
+
+    def get_queryset(self):
+        queries = self.queryset
+        q = self.request.query_params.get('q')
+        if q:
+            queries = queries.filter(name__icontains=q)
+        return queries
 
     # def get_permissions(self):
     #     if self.action in ['add_comment', 'like']:
     #         return [permissions.IsAuthenticated()]
     #     return self.permission_classes
     #
-    # @action(methods=['post'], url_path="comments", detail=True)
-    # def add_comment(self, request, pk):
-    #     comment = Comment.objects.create(user=request.user, lesson = self.get_object(), content=request.data.get('content'))
-    #     comment.save()
-    #
-    #     return Response(CommentSerializer(comment, context={
-    #         'request': request
-    #     }).data, status=status.HTTP_201_CREATED)
+    @action(methods=['patch'], url_path="chair", detail=True)
+    def update_active(self, request, pk):
+        chair = Chair.objects.update(active=False)
+        chair.save()
+
+        return Response(ChairSerializer(chair, context={
+            'request': request
+        }).data, status=status.HTTP_201_CREATED)
     #
     # @action(methods=['post'], url_path='like', detail=True)
     # def like(self, request, pk):
@@ -70,12 +91,13 @@ class GheViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
 
 
 
-#ve
-class GiaVeViewSet(viewsets.ViewSet, generics.ListAPIView):
-    queryset = GiaVe.objects.all()
-    serializer_class = GiaVeSerializer
 
-class VeViewSet(viewsets.ViewSet, generics.ListAPIView):
+# ve
+class PriceTViewSet(viewsets.ViewSet, generics.ListAPIView):
+    queryset = PriceT.objects.all()
+    serializer_class = PriceTSerializer
+
+class TicketViewSet(viewsets.ViewSet, generics.ListAPIView):
     pass
     # queryset = Ve.objects.all()
     # serializer_class = VeSerializer
@@ -97,29 +119,17 @@ class VeViewSet(viewsets.ViewSet, generics.ListAPIView):
 
 
 
-#chuyen xe
-class BenXeViewSet(viewsets.ViewSet, generics.ListAPIView):
-    queryset = BenXe.objects.all()
-    serializer_class = BenXeSerializer
+
+# chuyen xe
+class BStationViewSet(viewsets.ViewSet, generics.ListAPIView):
+    queryset = BStation.objects.all()
+    serializer_class = BStationSerializer
     # pagination_class = CoursePaginator
     # permission_classes = [permissions.IsAuthenticated]
-    # def get_queryset(self):
-    #     queries = self.queryset
-    #     q = self.request.query_params.get('q')
-    #     if q:
-    #         queries = queries.filter(subject__icontains=q)
-    #     return queries
-    #
-    # @action(methods=['get'],detail=True)
-    # def lessons(self, request, pk):
-    #     l = self.get_object().lesson_set.all()
-    #     return Response(LessonSerializer(l, many=True, context={
-    #         'request': request
-    #     }).data, status=status.HTTP_200_OK)
 
-class ChuyenXeViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
-    queryset = ChuyenXe.objects.all()
-    serializer_class = ChuyenXeSerializer
+class TripViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
+    queryset = Trip.objects.all()
+    serializer_class = TripSerializer
     # permission_classes = [permissions.AllowAny()]
 
     # def get_permissions(self):
@@ -149,7 +159,8 @@ class ChuyenXeViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
 
 
 
-#account
+
+# account
 class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -166,9 +177,9 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
     #         "request": request
     #     }).data, status=status.HTTP_200_OK)
 
-class TaiXeViewSet(viewsets.ViewSet, generics.CreateAPIView):
-    queryset = TaiXe.objects.all()
-    serializer_class = TaiXeSerializer
+class DriverViewSet(viewsets.ViewSet, generics.CreateAPIView):
+    queryset = Driver.objects.all()
+    serializer_class = DriverSerializer
     # parser_classes = [parsers.MultiPartParser, parsers.JSONParser]
 
     # def get_permissions(self):
@@ -182,9 +193,9 @@ class TaiXeViewSet(viewsets.ViewSet, generics.CreateAPIView):
     #         "request": request
     #     }).data, status=status.HTTP_200_OK)
 
-class KhachHangViewSet(viewsets.ViewSet, generics.CreateAPIView):
-    queryset = KhachHang.objects.all()
-    serializer_class = KhachHangSerializer
+class CustomerViewSet(viewsets.ViewSet, generics.CreateAPIView):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
     # parser_classes = [parsers.MultiPartParser, parsers.JSONParser]
 
     # def get_permissions(self):
@@ -198,9 +209,9 @@ class KhachHangViewSet(viewsets.ViewSet, generics.CreateAPIView):
     #         "request": request
     #     }).data, status=status.HTTP_200_OK)
 
-class NhanVienViewSet(viewsets.ViewSet, generics.CreateAPIView):
-    queryset = NhanVien.objects.all()
-    serializer_class = NhanVienSerializer
+class StaffViewSet(viewsets.ViewSet, generics.CreateAPIView):
+    queryset = Staff.objects.all()
+    serializer_class = StaffSerializer
     # parser_classes = [parsers.MultiPartParser, parsers.JSONParser]
 
     # def get_permissions(self):
@@ -213,6 +224,10 @@ class NhanVienViewSet(viewsets.ViewSet, generics.CreateAPIView):
     #     return Response(UserSerializer(request.user, context={
     #         "request": request
     #     }).data, status=status.HTTP_200_OK)
+
+
+
+
 
 # Create your views here.
 # class CategoryView(View):
@@ -233,11 +248,8 @@ class NhanVienViewSet(viewsets.ViewSet, generics.CreateAPIView):
 #     return HttpResponse(f'COURSE {course_id}')
 
 
-
-#complain
+# complain
 class ComplainViewSet(viewsets.ViewSet, generics.DestroyAPIView, generics.UpdateAPIView):
     queryset = Complain.objects.all()
     serializer_class = ComplainSerializer
     # permission_classes = [perms.OwnerPermission]
-
-
