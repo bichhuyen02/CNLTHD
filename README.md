@@ -2,6 +2,7 @@
 - cd ticketCar
 - pip install -r requerements.txt
 - python manage.py migrate
+- python manage.py createsuperuser
 2. Chuyển nhánh:
 - git branch (kiểm tra nhánh)
 - git checkout <tên nhánh> (chuyển nhánh)
