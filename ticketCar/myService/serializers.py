@@ -1,4 +1,5 @@
-from .models import Car, Customer, Category, Complain, Chair, Staff, BStation, PriceT, Trip, Driver,User
+from .models import Car, Customer, Category, Complain, Chair, Staff, BStation, PriceT, Trip, Driver, User, Ticket, \
+    Invoice
 from rest_framework import serializers
 
 
@@ -42,11 +43,17 @@ class PriceTSerializer(serializers.ModelSerializer):
         model = PriceT
         fields = ['id', 'price', 'date_cate', 'active']
 
+class InvoiceSerializer(serializers.ModelSerializer):
+     class Meta:
+         model = Invoice
+         fields = '__all__'
+
 class TicketSerializer(serializers.ModelSerializer):
-    pass
-    # class Meta:
-    #     model = GiaVe
-    #     fields = ['id', 'gia', 'loai', 'active']
+
+    class Meta:
+        model = Ticket
+        fields = ['id', 'staff', 'customer', 'chair', 'active', 'created_date', 'updated_date', 'invoice']
+
 
 
 
@@ -55,7 +62,7 @@ class BStationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BStation
-        fields = ['id', 'name', 'description', 'active']
+        fields = ['id', 'name', 'description', 'active', 'driver']
 
 class TripSerializer(serializers.ModelSerializer):
     # diemDen = TagSerializer(many=True)

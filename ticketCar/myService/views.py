@@ -3,14 +3,14 @@ from django.shortcuts import render
 from django.views import View
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .models import Car, Customer, Category, Complain, Chair, Staff, BStation, PriceT, Trip, Driver,User
+from .models import Car, Customer, Category, Complain, Chair, Staff, BStation, PriceT, Trip, Driver, User, Invoice, \
+    Ticket
 from rest_framework import viewsets, generics, status, permissions, parsers
 from .paginator import CoursePaginator, ChairPaginator
 # from . import perms
 from .serializers import CategorySerializer, CarSerializer, ChairSerializer, PriceTSerializer, BStationSerializer, \
-    TripSerializer, UserSerializer, DriverSerializer, CustomerSerializer, StaffSerializer, ComplainSerializer
-
-
+    TripSerializer, UserSerializer, DriverSerializer, CustomerSerializer, StaffSerializer, ComplainSerializer, \
+    InvoiceSerializer, TicketSerializer
 
 
 # xe
@@ -97,10 +97,13 @@ class PriceTViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = PriceT.objects.all()
     serializer_class = PriceTSerializer
 
+class InvoiceViewSet(viewsets.ViewSet, generics.ListAPIView):
+    queryset = Invoice.objects.all()
+    serializer_class = InvoiceSerializer
+
 class TicketViewSet(viewsets.ViewSet, generics.ListAPIView):
-    pass
-    # queryset = Ve.objects.all()
-    # serializer_class = VeSerializer
+    queryset = Ticket.objects.all()
+    serializer_class = TicketSerializer
     # pagination_class = CoursePaginator
     # permission_classes = [permissions.IsAuthenticated]
     # def get_queryset(self):
@@ -121,11 +124,15 @@ class TicketViewSet(viewsets.ViewSet, generics.ListAPIView):
 
 
 # chuyen xe
-class BStationViewSet(viewsets.ViewSet, generics.ListAPIView):
+class BStationViewSet(viewsets.ViewSet, generics.CreateAPIView):
     queryset = BStation.objects.all()
     serializer_class = BStationSerializer
     # pagination_class = CoursePaginator
     # permission_classes = [permissions.IsAuthenticated]
+
+    action(methods=['post'], detail=True)
+    # def add_
+
 
 class TripViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
     queryset = Trip.objects.all()
@@ -228,8 +235,6 @@ class StaffViewSet(viewsets.ViewSet, generics.CreateAPIView):
 
 
 
-
-# Create your views here.
 # class CategoryView(View):
 #
 #     def get(self, request):
@@ -249,7 +254,34 @@ class StaffViewSet(viewsets.ViewSet, generics.CreateAPIView):
 
 
 # complain
-class ComplainViewSet(viewsets.ViewSet, generics.DestroyAPIView, generics.UpdateAPIView):
+class ComplainViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
     queryset = Complain.objects.all()
     serializer_class = ComplainSerializer
     # permission_classes = [perms.OwnerPermission]
+
+    @action(methods=['post'], detail=True)
+    def add_complain(self, request):
+        complain = Complain.object.create(content=request.data.get('content'))
+        complain.save()
+
+        return Response(ComplainSerializer(complain, context={
+                'request': request
+            }).data, status=status.HTTP_201_CREATED)
+
+    @action(methods=['patch'], detail=True)
+    def add_complain(self, request):
+        complain = Complain.object.update(content=request.data.get('content'))
+        complain.save()
+
+        return Response(ComplainSerializer(complain, context={
+            'request': request
+        }).data, status=status.HTTP_202_ACCEPTED)
+
+    @action(methods=['delete'], detail=True)
+    def add_complain(self, request):
+        complain = Complain.object.delete()
+        complain.save()
+
+        return Response(ComplainSerializer(complain, context={
+            'request': request
+        }).data, status=status.HTTP_204_NO_CONTENT)

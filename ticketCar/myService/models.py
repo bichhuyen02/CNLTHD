@@ -5,7 +5,7 @@ from cloudinary.models import CloudinaryField
 
 
 
-role_user = ['Customer', 'Staff', 'Driver']
+role_user = ['Customer', 'Staff', 'Driver', 'Admin']
 role_choices = sorted([(item, item) for item in role_user])
 
 #account
@@ -85,6 +85,7 @@ class Trip(BaseModel):
     timeGo = models.TimeField(null=True)
     dateGo = models.DateField(null=True)
     description = RichTextField()
+    driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
     destination = models.ForeignKey(BStation, related_name='trip_destination', on_delete=models.CASCADE, null=True)
     departure = models.ForeignKey(BStation, related_name='trip_departure', on_delete=models.CASCADE, null=True)
 
@@ -92,12 +93,22 @@ class Trip(BaseModel):
 
 
 
-#giá vé
+#vé
 class PriceT(BaseModel):
     price = models.FloatField(null=True)
     date_cate = models.CharField(max_length=20, null=True)
     def __str__(self):
         return self.price
+
+class Invoice(BaseModel):
+    amout = models.FloatField()
+
+class Ticket(BaseModel):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    chair = models.ForeignKey(Chair, on_delete=models.CASCADE)
+    price = models.ForeignKey(PriceT, on_delete=models.CASCADE)
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE)
 
 
 

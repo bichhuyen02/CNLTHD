@@ -41,7 +41,15 @@ router.register('categories', views.CategoryViewSet, basename='categories')
 router.register('cars', views.CarViewSet, basename='cars')
 router.register('Chairs', views.ChairViewSet, basename='chairs')
 router.register('priceT', views.PriceTViewSet, basename='priceT')
-# router.register('comments', views.CommentViewSet, basename='comments')
+router.register('trips', views.TripViewSet, basename='trips')
+router.register('complain', views.ComplainViewSet, basename='complain')
+router.register('staff', views.StaffViewSet, basename='staff')
+router.register('customer', views.CustomerViewSet, basename='customer')
+router.register('driver', views.DriverViewSet, basename='driver')
+router.register('user', views.UserViewSet, basename='user')
+
+
+
 
 urlpatterns = [
     path('', include(router.urls)),
