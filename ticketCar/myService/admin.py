@@ -107,12 +107,13 @@ class TripAdmin(MyServiceAdmin):
     list_filter = ['timeGo', 'dateGo']
     form = TripForm
 
-    # def save_model(self, request, obj, form, change):
-    #     # Thêm điều kiện kiểm tra trước khi lưu đối tượng
-    #     trip = Trip.object.filter(active=True, driver=request.data.get('driver'))
-    #     if obj.some_field == some_value:
-    #         # Lưu đối tượng vào cơ sở dữ liệu
-    #         obj.save()
+    def save_model(self, request, obj, form, change):
+        # Thêm điều kiện kiểm tra trước khi lưu đối tượng
+        trip = Trip.object.filter(active=True, driver=request.data.get('driver'))
+
+        # if trip. != trip.:
+        #     # Lưu đối tượng vào cơ sở dữ liệu
+        #     obj.save()
 
 
 

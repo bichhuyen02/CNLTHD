@@ -1,5 +1,5 @@
 from .models import Car, Customer, Category, Complain, Chair, Staff, BStation, PriceT, Trip, Driver, User, Ticket, \
-    Invoice
+    Invoice, Buses
 from rest_framework import serializers
 
 
@@ -32,7 +32,7 @@ class ChairSerializer(serializers.ModelSerializer):
     # xe = XeSerializer()
     class Meta:
         model = Chair
-        fields = ['id', 'name', 'car', 'active']
+        fields = ['id', 'name', 'car', 'active', 'price']
 
 
 
@@ -63,6 +63,11 @@ class BStationSerializer(serializers.ModelSerializer):
     class Meta:
         model = BStation
         fields = ['id', 'name', 'description', 'active', 'driver']
+
+class BusesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Buses
+        fields = ['id', 'destination', 'departure', 'active']
 
 class TripSerializer(serializers.ModelSerializer):
     # diemDen = TagSerializer(many=True)

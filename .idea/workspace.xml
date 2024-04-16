@@ -6,10 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="47fb0c1c-cc5d-4ecc-a5f6-7bd90b0cd01b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ticketCar/myService/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/myService/admin.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ticketCar/myService/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ticketCar/myService/migrations/0002_remove_chair_description.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ticketCar/myService/migrations/0003_user_role_alter_pricet_price.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/ticketCar/myService/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/myService/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ticketCar/myService/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/myService/serializers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ticketCar/myService/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/myService/views.py" afterDir="false" />

@@ -3,14 +3,16 @@ from django.shortcuts import render
 from django.views import View
 from rest_framework.decorators import action
 from rest_framework.response import Response
+
+from . import perms
 from .models import Car, Customer, Category, Complain, Chair, Staff, BStation, PriceT, Trip, Driver, User, Invoice, \
-    Ticket
+    Ticket, Buses
 from rest_framework import viewsets, generics, status, permissions, parsers
 from .paginator import CoursePaginator, ChairPaginator
 # from . import perms
 from .serializers import CategorySerializer, CarSerializer, ChairSerializer, PriceTSerializer, BStationSerializer, \
     TripSerializer, UserSerializer, DriverSerializer, CustomerSerializer, StaffSerializer, ComplainSerializer, \
-    InvoiceSerializer, TicketSerializer
+    InvoiceSerializer, TicketSerializer, BusesSerializer
 
 
 # xe
@@ -26,11 +28,12 @@ class CategoryViewSet(viewsets.ViewSet, generics.ListAPIView):
         return queries
 
     @action(methods=['get'], detail=True)
-    def xe(self, request, pk):
+    def car(self, request, pk):
         l = self.get_object().car_set.all()
         return Response(CarSerializer(l, many=True, context={
             'request': request
         }).data, status=status.HTTP_200_OK)
+
 
 class CarViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = Car.objects.all()
@@ -47,8 +50,15 @@ class CarViewSet(viewsets.ViewSet, generics.ListAPIView):
 
     @action(methods=['get'], detail=True)
     def chair(self, request, pk):
-        l = self.get_object().chair_set.all()
-        return Response(ChairSerializer(l, many=True, context={
+        chair = self.get_object().chair_set.all()
+        return Response(ChairSerializer(chair, many=True, context={
+            'request': request
+        }).data, status=status.HTTP_200_OK)
+
+    @action(methods=['get'], detail=True)
+    def trip(self, request, pk):
+        trip = self.get_object().trip_set.all()
+        return Response(ChairSerializer(trip, many=True, context={
             'request': request
         }).data, status=status.HTTP_200_OK)
 
@@ -101,7 +111,7 @@ class InvoiceViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = Invoice.objects.all()
     serializer_class = InvoiceSerializer
 
-class TicketViewSet(viewsets.ViewSet, generics.ListAPIView):
+class TicketViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
     # pagination_class = CoursePaginator
@@ -133,36 +143,43 @@ class BStationViewSet(viewsets.ViewSet, generics.CreateAPIView):
     action(methods=['post'], detail=True)
     # def add_
 
+class BusesViewSet(viewsets.ViewSet, generics.ListAPIView):
+    queryset = Buses.objects.all()
+    serializer_class = BusesSerializer
 
 class TripViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
     queryset = Trip.objects.all()
     serializer_class = TripSerializer
-    # permission_classes = [permissions.AllowAny()]
+    permission_classes = [permissions.AllowAny()]
 
-    # def get_permissions(self):
-    #     if self.action in ['add_comment', 'like']:
-    #         return [permissions.IsAuthenticated()]
-    #     return self.permission_classes
-    #
-    # @action(methods=['post'], url_path="comments", detail=True)
-    # def add_comment(self, request, pk):
-    #     comment = Comment.objects.create(user=request.user, lesson = self.get_object(), content=request.data.get('content'))
-    #     comment.save()
-    #
-    #     return Response(CommentSerializer(comment, context={
-    #         'request': request
-    #     }).data, status=status.HTTP_201_CREATED)
-    #
-    # @action(methods=['post'], url_path='like', detail=True)
-    # def like(self, request, pk):
-    #     like,create = Like.objects.get_or_create(user=request.user, lesson=self.get_object())
-    #     if not create:
-    #         like.liked = not like.liked
-    #         like.save()
-    #
-    #     return Response(LessonSerializeDetail(self.get_object(),context={
-    #         "request": request
-    #     }).data, status=status.HTTP_200_OK)
+    def get_permissions(self):
+        if self.action in ['add_ticket', 'add_ticket_onl']:
+            return [permissions.IsAuthenticated()]
+        return self.permission_classes
+
+    @action(methods=['post'], url_path="ticket-onl", detail=True)
+    def add_ticket_onl(self, request, pk):
+        invoice = Invoice.objects.create()
+        invoice.save()
+
+        ticket = Ticket.objects.create(customer=request.user, trip=self.get_object(), invoice=invoice)
+        ticket.save()
+
+        return Response(TicketSerializer(ticket, context={
+            'request': request
+        }).data, status=status.HTTP_201_CREATED)
+
+    @action(methods=['post'], url_path='like', detail=True)
+    def like(self, request, pk):
+        invoice = Invoice.objects.create()
+        invoice.save()
+
+        ticket = Ticket.objects.create(staff=request.user, trip=self.get_object(), invoice=invoice)
+        ticket.save()
+
+        return Response(TicketSerializer(ticket, context={
+            'request': request
+        }).data, status=status.HTTP_201_CREATED)
 
 
 
@@ -171,18 +188,18 @@ class TripViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
 class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    # parser_classes = [parsers.MultiPartParser, parsers.JSONParser]
+    parser_classes = [parsers.MultiPartParser, parsers.JSONParser]
 
-    # def get_permissions(self):
-    #     if self.action in ['get_current']:
-    #         return [permissions.IsAuthenticated()]
-    #     return [permissions.AllowAny()]
-    #
-    # @action(methods=['get'], url_path="current", detail=False)
-    # def get_current(self, request):
-    #     return Response(UserSerializer(request.user, context={
-    #         "request": request
-    #     }).data, status=status.HTTP_200_OK)
+    def get_permissions(self):
+        if self.action in ['get_current']:
+            return [permissions.IsAuthenticated()]
+        return [permissions.AllowAny()]
+
+    @action(methods=['get'], url_path="current", detail=False)
+    def get_current(self, request):
+        return Response(UserSerializer(request.user, context={
+            "request": request
+        }).data, status=status.HTTP_200_OK)
 
 class DriverViewSet(viewsets.ViewSet, generics.CreateAPIView):
     queryset = Driver.objects.all()
@@ -257,7 +274,7 @@ class StaffViewSet(viewsets.ViewSet, generics.CreateAPIView):
 class ComplainViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
     queryset = Complain.objects.all()
     serializer_class = ComplainSerializer
-    # permission_classes = [perms.OwnerPermission]
+    permission_classes = [perms.OwnerPermission]
 
     @action(methods=['post'], detail=True)
     def add_complain(self, request):

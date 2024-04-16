@@ -44,6 +44,13 @@ class BaseModel(models.Model):
 
 
 
+#giá
+class PriceT(BaseModel):
+    price = models.FloatField(blank=True)
+    date_cate = models.CharField(max_length=20, blank=True)
+    def __str__(self):
+        return self.price
+
 
 #xe
 class Category(BaseModel):
@@ -59,12 +66,11 @@ class Car(BaseModel):
     def __str__(self):
         return self.licensePlates
 
-    class Meta:
-        unique_together = ('licensePlates', 'category')
-
 class Chair(BaseModel):
     name = models.CharField(max_length=50, null=True)
     car = models.ForeignKey(Car, on_delete=models.CASCADE, null=True)
+    price = models.ForeignKey(PriceT, on_delete=models.CASCADE)
+
     def __str__(self):
         return self.name
 
@@ -77,37 +83,39 @@ class Chair(BaseModel):
 #chuyến xe
 class BStation(BaseModel):
     name = models.CharField(max_length=50, null=True)
-    description = RichTextField()
+    description = RichTextField(blank=False)
     def __str__(self):
         return self.name
 
+class Buses(BaseModel):
+    destination = models.ForeignKey(BStation, related_name='trip_destination', on_delete=models.CASCADE, blank=True)
+    departure = models.ForeignKey(BStation, related_name='trip_departure', on_delete=models.CASCADE, blank=True)
+
+    class Meta:
+        unique_together = ('destination', 'departure')
+
 class Trip(BaseModel):
-    timeGo = models.TimeField(null=True)
-    dateGo = models.DateField(null=True)
-    description = RichTextField()
+    timeGo = models.TimeField(blank=True)
+    dateGo = models.DateField(blank=True)
+    description = RichTextField(blank=False)
     driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
-    destination = models.ForeignKey(BStation, related_name='trip_destination', on_delete=models.CASCADE, null=True)
-    departure = models.ForeignKey(BStation, related_name='trip_departure', on_delete=models.CASCADE, null=True)
+    car = models.ForeignKey(Car,on_delete=models.CASCADE)
+    buses = models.ForeignKey(Buses, on_delete=models.CASCADE)
+
 
 
 
 
 
 #vé
-class PriceT(BaseModel):
-    price = models.FloatField(null=True)
-    date_cate = models.CharField(max_length=20, null=True)
-    def __str__(self):
-        return self.price
-
 class Invoice(BaseModel):
-    amout = models.FloatField()
+    amout = models.FloatField(blank=False)
 
 class Ticket(BaseModel):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, blank=False)
     chair = models.ForeignKey(Chair, on_delete=models.CASCADE)
-    price = models.ForeignKey(PriceT, on_delete=models.CASCADE)
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE)
 
 
@@ -115,7 +123,7 @@ class Ticket(BaseModel):
 
 #complain
 class Complain(BaseModel):
-    content = models.CharField(max_length=255, null=True)
+    content = models.CharField(max_length=255, blank=True)
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     def __str__(self):
