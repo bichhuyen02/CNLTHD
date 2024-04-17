@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import Login from './components/User/Login';
+import Account from './components/User/Account';
 
 
 
@@ -28,6 +29,7 @@ export default  App = () => {
       <Tab.Screen name="Trang chủ" component={HomeScreen} />
       <Tab.Screen name="Lịch sử" component={SettingsScreen} />
       <Tab.Screen name="Tài khoản" component={Login} />
+      <Tab.Screen name="acc" component={Account} />
     </Tab.Navigator>
   </NavigationContainer>
   );

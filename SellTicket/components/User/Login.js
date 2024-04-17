@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
-import Apis, { endpoints } from '../../Apis';
+import Apis, { authApi, endpoints } from '../../Apis';
 import MyContext from '../../MyContext';
 
 export default Login = () => {
@@ -13,8 +13,8 @@ export default Login = () => {
       setLoading(true);
       try {
           let res = await Apis.post(endpoints['login'], {
-              'client_id': 'uRBhwy9Hx0a7QBygq3neut9EzLrRcMvqvrwHJuJH',
-              'client_secret': 'GZbo8frjKv3wodw4EUVKVYM27LcY8Blce32lvqISu6crY9HAsOkA6DNf5B6Yl26YwjQb18GGPaJwBjWOOV6wnA6emlLJt8K5BMrnbQwpS3vUAbSLDvD00YngzrY5eRuC',
+              'client_id': 'giKPdDSiFGtLG0JfzhgxZ0MHwubYmLVFqXte33Dd',
+              'client_secret': 'YGpXRhe2qS8d41hLXwaHgtQ3LTxqEeS3M2Lo50Wo3zG3hZzmQmeTY7Gta39aUUj2TwN8oDMBuXNZZy5K4pWplruEDBVeH0c7NOozQ3kC0ibwA7WOJQcHmiW2245IGUmW',
               'username': username,
               'password': password,
               'grant_type': 'password'

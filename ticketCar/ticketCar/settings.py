@@ -32,6 +32,10 @@ cloudinary.config(
     api_secret="ijP4MyTWOXI-behy-Z3TUso5UAA"
 )
 
+Client_id = 'giKPdDSiFGtLG0JfzhgxZ0MHwubYmLVFqXte33Dd'
+Client_secret = 'YGpXRhe2qS8d41hLXwaHgtQ3LTxqEeS3M2Lo50Wo3zG3hZzmQmeTY7Gta39aUUj2TwN8oDMBuXNZZy5K4pWplruEDBVeH0c7NOozQ3kC0ibwA7WOJQcHmiW2245IGUmW'
+
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',

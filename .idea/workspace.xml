@@ -4,38 +4,30 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47fb0c1c-cc5d-4ecc-a5f6-7bd90b0cd01b" name="Changes" comment="">
+    <list default="true" id="898721c2-db9d-4768-8a2a-b50f84aad203" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/CNLTHD.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/CNLTHD.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ticketCar/myService/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/myService/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SellTicket/Apis.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/Apis.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SellTicket/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SellTicket/components/User/Login.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/components/User/Login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SellTicket/components/User/Logout.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/components/User/Logout.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ticketCar/myService/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ticketCar/myService/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/myService/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ticketCar/myService/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/myService/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ticketCar/myService/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/myService/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ticketCar/ticketCar/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/ticketCar/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ticketCar/ticketCar/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/ticketCar/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Python Script" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 1
 }</component>
-  <component name="ProjectId" id="2erqs0q15u7Y6B82qhzm1zmJtJW" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
+  <component name="ProjectId" id="2fCrfZdthjMl3VNtyrVqqw0Kgx9" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -44,7 +36,6 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/CNHienDai/CNLTHD&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
 }</component>
@@ -58,35 +49,12 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="47fb0c1c-cc5d-4ecc-a5f6-7bd90b0cd01b" name="Changes" comment="" />
-      <created>1712673250626</created>
+      <changelist id="898721c2-db9d-4768-8a2a-b50f84aad203" name="Changes" comment="" />
+      <created>1713316006628</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1712673250626</updated>
+      <updated>1713316006628</updated>
     </task>
     <servers />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="origin/huyen" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
-          </value>
-        </entry>
-      </map>
-    </option>
   </component>
 </project>

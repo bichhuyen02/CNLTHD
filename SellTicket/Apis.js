@@ -8,7 +8,7 @@ export const endpoints = {
     'lessons': (course_Id) => `/courses/${course_Id}/lessons/`,
     'lessonDetail': (lessonId) => `/lessons/${lessonId}/`,
     'login': '/o/token/',
-    'current_user': '/users/current_user/',
+    'current_user': '/user/current/',
     'register': '/users/',
     'comments': (lessonId) => `/lessons/${lessonId}/comments/`
 }
