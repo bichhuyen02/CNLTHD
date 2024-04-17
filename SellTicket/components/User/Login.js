@@ -3,7 +3,7 @@ import { View, Text, Image, TextInput, TouchableOpacity, ActivityIndicator } fro
 import Apis, { authApi, endpoints } from '../../Apis';
 import MyContext from '../../MyContext';
 
-export default Login = () => {
+export default Login = ({navigation}) => {
     const [username, setUsername] = useState();
     const [password, setPassword] = useState();
     const [user, dispatch] = useState(MyContext);
@@ -29,7 +29,7 @@ export default Login = () => {
                           'username': user.data.username
                       }
                   })
-          navigation.navigate('Home');
+          navigation.navigate("Login");
       } catch (error) {
           console.error(error);
       } finally{

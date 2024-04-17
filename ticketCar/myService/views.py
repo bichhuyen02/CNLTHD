@@ -79,14 +79,18 @@ class ChairViewSet(viewsets.ViewSet, generics.ListAPIView):
     #         return [permissions.IsAuthenticated()]
     #     return self.permission_classes
     #
-    # @action(methods=['patch'], detail=True)
-    # def update_active(self, request, pk):
-    #     chair = Chair.objects.update(active=False)
-    #     chair.save()
-    #
-    #     return Response(ChairSerializer(chair, context={
-    #         'request': request
-    #     }).data, status=status.HTTP_201_CREATED)
+    @action(methods=['patch'], detail=True)
+    def update_active(self, request, pk):
+        if self.action.__eq__(True):
+            chair = self.objects.update(active=False)
+            chair.save()
+        else:
+            chair = self.objects.update(active=True)
+            chair.save()
+
+        return Response(ChairSerializer(self, context={
+            'request': request
+        }).data, status=status.HTTP_200_OK)
     #
     # @action(methods=['post'], url_path='like', detail=True)
     # def like(self, request, pk):
@@ -169,8 +173,8 @@ class TripViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
             'request': request
         }).data, status=status.HTTP_201_CREATED)
 
-    @action(methods=['post'], url_path='like', detail=True)
-    def like(self, request, pk):
+    @action(methods=['post'], url_path='ticket', detail=True)
+    def ticket(self, request, pk):
         invoice = Invoice.objects.create()
         invoice.save()
 
@@ -181,6 +185,32 @@ class TripViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
             'request': request
         }).data, status=status.HTTP_201_CREATED)
 
+    @action(methods=['post'], url_path='add_complain', detail=True)
+    def add_complain(self, request, pk):
+        complain = Complain.objects.create(custumer=request.user, trip=self.get_object(), conten= request.data.get('content'))
+        complain.save()
+
+        return Response(TicketSerializer(complain, context={
+            'request': request
+        }).data, status=status.HTTP_201_CREATED)
+
+    @action(methods=['patch'], url_path='up_complain', detail=True)
+    def up_complain(self, request, pk):
+        complain = Complain.objects.update(conten=request.data.get('content'))
+        complain.save()
+
+        return Response(TicketSerializer(complain, context={
+            'request': request
+        }).data, status=status.HTTP_202_ACCEPTED)
+
+    @action(methods=['delete'], url_path='de_complain', detail=True)
+    def de_complain(self, request, pk):
+        complain = Complain.objects.delete(pk)
+        complain.save()
+
+        return Response(TicketSerializer(complain, context={
+            'request': request
+        }).data, status=status.HTTP_201_CREATED)
 
 
 
@@ -252,53 +282,9 @@ class StaffViewSet(viewsets.ViewSet, generics.CreateAPIView):
 
 
 
-# class CategoryView(View):
-#
-#     def get(self, request):
-#         cats = Category.objects.all()
-#         return render(request, 'courses/list.html', {
-#             'categories': cats
-#         })
-#
-#     def post(self, request):
-#         pass
-#
-# def index(request):
-#     return HttpResponse('HELLO CS2001')
-#
-# def list(request, course_id):
-#     return HttpResponse(f'COURSE {course_id}')
-
 
 # complain
-class ComplainViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
+class ComplainViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView, generics.ListAPIView):
     queryset = Complain.objects.all()
     serializer_class = ComplainSerializer
     permission_classes = [perms.OwnerPermission]
-
-    @action(methods=['post'], detail=True)
-    def add_complain(self, request):
-        complain = Complain.object.create(content=request.data.get('content'))
-        complain.save()
-
-        return Response(ComplainSerializer(complain, context={
-                'request': request
-            }).data, status=status.HTTP_201_CREATED)
-
-    @action(methods=['patch'], detail=True)
-    def add_complain(self, request):
-        complain = Complain.object.update(content=request.data.get('content'))
-        complain.save()
-
-        return Response(ComplainSerializer(complain, context={
-            'request': request
-        }).data, status=status.HTTP_202_ACCEPTED)
-
-    @action(methods=['delete'], detail=True)
-    def add_complain(self, request):
-        complain = Complain.object.delete()
-        complain.save()
-
-        return Response(ComplainSerializer(complain, context={
-            'request': request
-        }).data, status=status.HTTP_204_NO_CONTENT)
