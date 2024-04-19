@@ -24,13 +24,6 @@ MEDIA_ROOT = '%s/myService/static/' % BASE_DIR
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-@2p0fsn$mtuj*ay-^1p-4gos%7#6xwvkd727!%rc(s25r3iq8@'
 
-import cloudinary
-
-cloudinary.config(
-    cloud_name="dtoc5lqfe",
-    api_key="346556316858336",
-    api_secret="ijP4MyTWOXI-behy-Z3TUso5UAA"
-)
 
 Client_id = 'giKPdDSiFGtLG0JfzhgxZ0MHwubYmLVFqXte33Dd'
 Client_secret = 'YGpXRhe2qS8d41hLXwaHgtQ3LTxqEeS3M2Lo50Wo3zG3hZzmQmeTY7Gta39aUUj2TwN8oDMBuXNZZy5K4pWplruEDBVeH0c7NOozQ3kC0ibwA7WOJQcHmiW2245IGUmW'
@@ -62,7 +55,6 @@ INSTALLED_APPS = [
     'myService.apps.MyserviceConfig',
     'ckeditor',
     'ckeditor_uploader',
-    'cloudinary',
     'rest_framework',
     'drf_yasg',
     'oauth2_provider',
@@ -149,3 +141,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+OAUTH2_PROVIDER = {
+    'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore'
+}

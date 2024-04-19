@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from ckeditor.fields import RichTextField
-from cloudinary.models import CloudinaryField
 
 
 
@@ -10,9 +9,9 @@ role_choices = sorted([(item, item) for item in role_user])
 
 #account
 class User(AbstractUser):
-    avatar = CloudinaryField('avatar', null=True)
+    avatar = models.ImageField(upload_to="ava/%Y/%m", null=True)
     active = models.BooleanField(default=True)
-    role = models.CharField(max_length= 20, choices=role_choices, default='Customer')
+    role = models.CharField(max_length = 20, choices=role_choices, default='Customer')
 
 class Staff(models.Model):
     phone = models.CharField(max_length=10, null=True)
@@ -27,7 +26,7 @@ class Customer(models.Model):
 class Driver(models.Model):
     phone = models.CharField(max_length=10, null=True)
     birth = models.DateField()
-    license = CloudinaryField('license', null=True)
+    license = models.ImageField(upload_to="license/%Y/%m", null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
