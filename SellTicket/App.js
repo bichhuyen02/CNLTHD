@@ -10,7 +10,10 @@ import MyUserReducer from './MyUserReducer'
 import Apis, { endpoints } from './Apis';
 import Logout from './components/User/Logout';
 import Register from './components/User/Register';
-
+import Signin from './components/User/Signin';
+import Welcome from './components/User/Welcome';
+import Home from './components/Home/Home';
+import RegisterAccount from './components/User/RegisterAccount';
 
 const HomeScreen = (props) => {
   // const [categories, setCategories] = useState([]);
@@ -47,11 +50,12 @@ export default  App = () => {
     <MyContext.Provider value={[user , dispatch]}>
     <NavigationContainer>
     <Tab.Navigator>
-      <Tab.Screen name="Trang chủ" component={HomeScreen} />
-      <Tab.Screen name="Đăng kí" component={Register} />
-      <Tab.Screen name="Tài khoản" component={Login} />
-      <Tab.Screen name="out" component={Logout} />
-      <Tab.Screen name="acc" component={Account} />
+      <Tab.Screen name="Xin Chào" component={Welcome} />
+      <Tab.Screen name="Trang chủ" component={Home} />
+        <Tab.Screen name="Tài khoản" component={Login} />
+      <Tab.Screen name="Đăng nhập" component={Signin} />
+      <Tab.Screen name="Đăng ký tài khoản" component={RegisterAccount} />
+      
     </Tab.Navigator>
   </NavigationContainer>
   </MyContext.Provider>

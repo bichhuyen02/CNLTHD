@@ -1,6 +1,6 @@
 1. Chạy project pycharm: 
 - cd ticketCar
-- pip install -r requerements.txt
+- pip install -r requirements.txt
 - python manage.py migrate
 - python manage.py createsuperuser
 2. Chuyển nhánh:

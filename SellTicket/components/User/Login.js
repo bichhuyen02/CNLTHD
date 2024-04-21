@@ -6,7 +6,7 @@ import MyContext from '../../MyContext';
 import Styles from "./Styles";
 
 
-export default Login = ({navigation}) => {
+export default Login = () => {
     const [username, setUsername] = useState();
     const [password, setPassword] = useState();
     const [user, dispatch] = useContext(MyContext);
@@ -20,8 +20,8 @@ export default Login = ({navigation}) => {
           let res = await Apis.post(endpoints['login'], {
             "username": username, 
             "password": password,
-            "client_id": "Lhh7xLgBYQXag5ch7oUoGJBM6B6YlCy1vDTiMht8",
-            "client_secret": "OXD3Ba9YweJFdGCbdD1Le1N9yDfo5mXfP1ucNMrqGaZM1ZO7cc7vA7K6rILkZGPTyqnAZRCzRXcxavVcN9RTKCpcuJiwsB5dlD71aiHj72a5fJnw56O6P0AEiN7EBXgL",
+            "client_id": "eVmnPD6EG0lsdsRwzYO8Ps5NIwD4O43jIYzr79Ni",
+            "client_secret": "kAtqtiQYGUOgLCGUHY4n44kLiyLnPZ7070LE2TuSd39qknD4fHd9FSiCGYCJBaLf9PnKVjvC7Wwhwk6sSqASFE59eencVDmV0ZpoVqwiBvDk3IZtHcNQ2HuAeODxA9RG",
             "grant_type": "password"
           });
 
