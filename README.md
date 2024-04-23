@@ -1,8 +1,10 @@
 1. Chạy project pycharm: 
 - cd ticketCar
 - pip install -r requirements.txt
+- python manage.py makemigrations myService
 - python manage.py migrate
 - python manage.py createsuperuser
+- python manage.py runserver
 2. Chuyển nhánh:
 - git branch (kiểm tra nhánh)
 - git checkout <tên nhánh> (chuyển nhánh)
@@ -27,3 +29,4 @@
 - npm start (npx expo start --tunnel)
 7. fix
 - npm audit fix --force
+- python manage.py migrate oauth2_provider

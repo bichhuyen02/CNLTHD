@@ -15,6 +15,8 @@ from .serializers import CategorySerializer, CarSerializer, ChairSerializer, Pri
     InvoiceSerializer, TicketSerializer, BusesSerializer
 
 
+
+
 # xe
 class CategoryViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = Category.objects.all()
@@ -26,14 +28,13 @@ class CategoryViewSet(viewsets.ViewSet, generics.ListAPIView):
         if q:
             queries = queries.filter(name__icontains=q)
         return queries
-
-    @action(methods=['get'], detail=True)
-    def car(self, request, pk):
-        l = self.get_object().car_set.all()
-        return Response(CarSerializer(l, many=True, context={
-            'request': request
-        }).data, status=status.HTTP_200_OK)
-
+    #
+    # @action(methods=['get'], detail=True)
+    # def car(self, request, pk):
+    #     l = self.get_object().car_set.all()
+    #     return Response(CarSerializer(l, many=True, context={
+    #         'request': request
+    #     }).data, status=status.HTTP_200_OK)
 
 class CarViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = Car.objects.all()
@@ -55,17 +56,16 @@ class CarViewSet(viewsets.ViewSet, generics.ListAPIView):
             'request': request
         }).data, status=status.HTTP_200_OK)
 
-    @action(methods=['get'], detail=True)
-    def trip(self, request, pk):
-        trip = self.get_object().trip_set.all()
-        return Response(ChairSerializer(trip, many=True, context={
-            'request': request
-        }).data, status=status.HTTP_200_OK)
-
 class ChairViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = Chair.objects.all()
     serializer_class = ChairSerializer
     # permission_classes = [permissions.AllowAny()]
+    def get_queryset(self):
+        queries = self.queryset
+        q = self.request.query_params.get('q')
+        if q:
+            queries = queries.filter(subject__icontains=q)
+        return queries
 
     def get_queryset(self):
         queries = self.queryset
@@ -91,17 +91,8 @@ class ChairViewSet(viewsets.ViewSet, generics.ListAPIView):
         return Response(ChairSerializer(self, context={
             'request': request
         }).data, status=status.HTTP_200_OK)
-    #
-    # @action(methods=['post'], url_path='like', detail=True)
-    # def like(self, request, pk):
-    #     like,create = Like.objects.get_or_create(user=request.user, lesson=self.get_object())
-    #     if not create:
-    #         like.liked = not like.liked
-    #         like.save()
-    #
-    #     return Response(LessonSerializeDetail(self.get_object(),context={
-    #         "request": request
-    #     }).data, status=status.HTTP_200_OK)
+
+
 
 
 
@@ -111,13 +102,34 @@ class PriceTViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = PriceT.objects.all()
     serializer_class = PriceTSerializer
 
+    def get_queryset(self):
+        queries = self.queryset
+        q = self.request.query_params.get('q')
+        if q:
+            queries = queries.filter(subject__icontains=q)
+        return queries
+
 class InvoiceViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = Invoice.objects.all()
     serializer_class = InvoiceSerializer
 
+    def get_queryset(self):
+        queries = self.queryset
+        q = self.request.query_params.get('q')
+        if q:
+            queries = queries.filter(subject__icontains=q)
+        return queries
+
 class TicketViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
+
+    def get_queryset(self):
+        queries = self.queryset
+        q = self.request.query_params.get('q')
+        if q:
+            queries = queries.filter(subject__icontains=q)
+        return queries
     # pagination_class = CoursePaginator
     # permission_classes = [permissions.IsAuthenticated]
     # def get_queryset(self):
@@ -137,24 +149,46 @@ class TicketViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.UpdateAPI
 
 
 
+
+
 # chuyen xe
-class BStationViewSet(viewsets.ViewSet, generics.CreateAPIView):
+class BStationViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = BStation.objects.all()
     serializer_class = BStationSerializer
     # pagination_class = CoursePaginator
     # permission_classes = [permissions.IsAuthenticated]
+    def get_queryset(self):
+        queries = self.queryset
+        q = self.request.query_params.get('q')
+        if q:
+            queries = queries.filter(subject__icontains=q)
+        return queries
 
-    action(methods=['post'], detail=True)
+    # action(methods=['post'], detail=True)
     # def add_
 
 class BusesViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = Buses.objects.all()
     serializer_class = BusesSerializer
 
-class TripViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
+    def get_queryset(self):
+        queries = self.queryset
+        q = self.request.query_params.get('q')
+        if q:
+            queries = queries.filter(subject__icontains=q)
+        return queries
+
+class TripViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, generics.DestroyAPIView, generics.UpdateAPIView):
     queryset = Trip.objects.all()
     serializer_class = TripSerializer
     permission_classes = [permissions.AllowAny()]
+
+    def get_queryset(self):
+        queries = self.queryset
+        q = self.request.query_params.get('q')
+        if q:
+            queries = queries.filter(subject__icontains=q)
+        return queries
 
     def get_permissions(self):
         if self.action in ['add_ticket', 'add_ticket_onl']:
@@ -214,6 +248,11 @@ class TripViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
 
 
 
+
+
+
+
+
 # account
 class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
     queryset = User.objects.filter(is_active=True).all()
@@ -224,6 +263,13 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
         if self.action in ['current_user']:
             return [permissions.IsAuthenticated()]
         return [permissions.AllowAny()]
+
+    def get_queryset(self):
+        queries = self.queryset
+        q = self.request.query_params.get('q')
+        if q:
+            queries = queries.filter(subject__icontains=q)
+        return queries
 
     @action(methods=['get'], url_path="current-user", detail=False)
     def current_user(self, request):
@@ -236,6 +282,12 @@ class DriverViewSet(viewsets.ViewSet, generics.CreateAPIView):
     serializer_class = DriverSerializer
     # parser_classes = [parsers.MultiPartParser, parsers.JSONParser]
 
+    def get_queryset(self):
+        queries = self.queryset
+        q = self.request.query_params.get('q')
+        if q:
+            queries = queries.filter(subject__icontains=q)
+        return queries
     # def get_permissions(self):
     #     if self.action in ['get_current']:
     #         return [permissions.IsAuthenticated()]
@@ -252,6 +304,12 @@ class CustomerViewSet(viewsets.ViewSet, generics.CreateAPIView):
     serializer_class = CustomerSerializer
     # parser_classes = [parsers.MultiPartParser, parsers.JSONParser]
 
+    def get_queryset(self):
+        queries = self.queryset
+        q = self.request.query_params.get('q')
+        if q:
+            queries = queries.filter(subject__icontains=q)
+        return queries
     # def get_permissions(self):
     #     if self.action in ['get_current']:
     #         return [permissions.IsAuthenticated()]
@@ -268,6 +326,13 @@ class StaffViewSet(viewsets.ViewSet, generics.CreateAPIView):
     serializer_class = StaffSerializer
     # parser_classes = [parsers.MultiPartParser, parsers.JSONParser]
 
+    def get_queryset(self):
+        queries = self.queryset
+        q = self.request.query_params.get('q')
+        if q:
+            queries = queries.filter(subject__icontains=q)
+        return queries
+
     # def get_permissions(self):
     #     if self.action in ['get_current']:
     #         return [permissions.IsAuthenticated()]
@@ -283,8 +348,17 @@ class StaffViewSet(viewsets.ViewSet, generics.CreateAPIView):
 
 
 
+
+
 # complain
 class ComplainViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView, generics.ListAPIView):
     queryset = Complain.objects.all()
     serializer_class = ComplainSerializer
     permission_classes = [perms.OwnerPermission]
+
+    def get_queryset(self):
+        queries = self.queryset
+        q = self.request.query_params.get('q')
+        if q:
+            queries = queries.filter(subject__icontains=q)
+        return queries

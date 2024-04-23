@@ -4,7 +4,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react
 const Welcome = ({ navigation }) => {
   const handleLogin = () => {
     // Xử lý khi nhấn nút Đăng nhập
-    navigation.navigate('Signin'); // Chuyển đến màn hình đăng nhập
+    navigation.navigate('Đăng nhập'); // Chuyển đến màn hình đăng nhập
   };
 
   const handleRegister = () => {

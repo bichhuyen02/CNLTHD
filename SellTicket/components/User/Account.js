@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react-native'
+import Apis, { endpoints } from '../../config/Apis'
+import { SelectList } from 'react-native-dropdown-select-list'
 
-export default ProfileView = () => {
+export default ProfileView = (props) => {
   const data = [
     { id: 1, image: 'https://img.icons8.com/color/70/000000/cottage.png', title: 'Order' },
     {
@@ -13,11 +15,49 @@ export default ProfileView = () => {
     { id: 4, image: 'https://img.icons8.com/color/70/000000/facebook-like.png', title: 'Download' },
     { id: 5, image: 'https://img.icons8.com/color/70/000000/shutdown.png', title: 'Edit' },
   ]
-
+  
+  const [selected, setSelected] = useState("");
   const [options, setOptions] = useState(data)
+  const [bStation, setBStation] = useState(null)
+  const [buses, setBuses] = useState(null);
+  const [trip, setTrip] = useState(null)
 
+  useEffect(()=>{
+    const loadBStation = async()=>{
+      let bStation = await Apis.get(endpoints['bStation'])
+      console.info(bStation.data);
+      setBStation(bStation.data)
+    };
+
+    const loadBuses = async()=>{
+      let buses = await Apis.get(endpoints['buses'], 
+                       {params:{destination: bs_id, departure: bs_id}});
+      console.info(buses.data)
+      setBuses(buses.data);
+    };
+
+    const loadtrip = async()=>{
+      let trips = await Apis.get(endpoints['trip'], 
+                              {params: { car: car_id, buses: bus_id }});
+            console.info(trips.data)
+            setTrip(trips.data);
+    };
+
+    loadBStation();
+    loadBuses();
+    loadtrip();
+  }, []);
+
+  console.info(selected);
   return (
-    <View style={styles.container}>
+    <View {...props}style={styles.container}>
+      <View>
+      <SelectList 
+        setSelected={(val) => setSelected(val)} 
+        data={bStation.map(b=>[{key:b.id, value: b.name}])}
+        save="key"
+    />
+      </View>
       <View style={styles.header}>
         <View style={styles.headerContent}>
           <Image

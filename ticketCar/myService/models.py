@@ -7,27 +7,37 @@ from ckeditor.fields import RichTextField
 role_user = ['Customer', 'Staff', 'Driver', 'Admin']
 role_choices = sorted([(item, item) for item in role_user])
 
+role_date = ['Lễ_Ghế', 'Lễ_Giường', 'Thường_Ghế', 'Thường_Giường']
+role_date = sorted([(item, item) for item in role_date])
+
 #account
 class User(AbstractUser):
     avatar = models.ImageField(upload_to="ava/%Y/%m", null=True)
-    active = models.BooleanField(default=True)
-    role = models.CharField(max_length = 20, choices=role_choices, default='Customer')
+    role = models.CharField(choices=role_choices, max_length=20, default="Customer")
 
 class Staff(models.Model):
     phone = models.CharField(max_length=10, null=True)
     birth = models.DateField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.user.username
+
 class Customer(models.Model):
     phone = models.CharField(max_length=10, null=True)
     birth = models.DateField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username
 
 class Driver(models.Model):
     phone = models.CharField(max_length=10, null=True)
     birth = models.DateField()
     license = models.ImageField(upload_to="license/%Y/%m", null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.user.username
 
 
 
@@ -45,10 +55,11 @@ class BaseModel(models.Model):
 
 #giá
 class PriceT(BaseModel):
-    price = models.FloatField(blank=True)
-    date_cate = models.CharField(max_length=20, blank=True)
+    price = models.FloatField( blank=True)
+    date_cate = models.CharField(choices=role_date, max_length=50, blank=True, default="Lễ_Ghế")
+
     def __str__(self):
-        return self.price
+        return "loại: {}, giá: {}".format(self.date_cate, str(self.price))
 
 
 #xe
@@ -63,12 +74,11 @@ class Car(BaseModel):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.licensePlates
+        return "Biển số: {}, Loại: {}".format(self.licensePlates, self.category.name)
 
 class Chair(BaseModel):
     name = models.CharField(max_length=50, null=True)
     car = models.ForeignKey(Car, on_delete=models.CASCADE, null=True)
-    price = models.ForeignKey(PriceT, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -82,7 +92,7 @@ class Chair(BaseModel):
 #chuyến xe
 class BStation(BaseModel):
     name = models.CharField(max_length=50, null=True)
-    description = RichTextField(blank=False)
+    description = RichTextField(null=True)
     def __str__(self):
         return self.name
 
@@ -93,6 +103,9 @@ class Buses(BaseModel):
     class Meta:
         unique_together = ('destination', 'departure')
 
+    def __str__(self):
+        return "Đi: {}, Đến: {}".format(self.destination.name, self.departure.name)
+
 class Trip(BaseModel):
     timeGo = models.TimeField(blank=True)
     dateGo = models.DateField(blank=True)
@@ -100,6 +113,7 @@ class Trip(BaseModel):
     driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
     car = models.ForeignKey(Car,on_delete=models.CASCADE)
     buses = models.ForeignKey(Buses, on_delete=models.CASCADE)
+    price = models.ForeignKey(PriceT, on_delete=models.CASCADE)
 
 
 
@@ -109,6 +123,8 @@ class Trip(BaseModel):
 #vé
 class Invoice(BaseModel):
     amout = models.FloatField(blank=False)
+    def __str__(self):
+        return str(self.amout)
 
 class Ticket(BaseModel):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
@@ -116,6 +132,9 @@ class Ticket(BaseModel):
     chair = models.ForeignKey(Chair, on_delete=models.CASCADE)
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.chair.name
 
 
 

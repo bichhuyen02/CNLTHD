@@ -1,17 +1,47 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons'; // Import icon từ thư viện Expo
+import MyContext from '../../config/MyContext';
+import {client_id, client_secret} from '../../key/Key_app'
+import { authApi, endpoints } from '../../config/Apis';
 
 
-const Signin = () => {
+const Signin = ({ navigation }) => {
+  const [user, dispatch] = useContext(MyContext);
+  const [loading, setLoading] = useState();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = () => {
-    // Xử lý đăng nhập ở đây
-    console.log('Đăng nhập với:', username, password);
+  const handleLogin = async () => {
+    setLoading(true);
+    try {
+        let res = await Apis.post(endpoints['login'], {
+          "username": username, 
+          "password": password,
+          "client_id": client_id,
+          "client_secret": client_secret,
+          "grant_type": "password"
+        });
+
+        console.info(res.data)
+
+        await AsyncStorage.setItem('access-token', res.data.access_token)
+        let user = await authApi(res.data.access_token).get(endpoints['current_user']);
+        console.info(user.data)
+        dispatch({
+                    'type': 'login',
+                    'payload': {
+                        'username': user.data.username
+                    }
+                })
+        navigation.navigate('Trang chủ');    
+    } catch (error) {
+        console.error(error);
+    } finally{
+        setLoading(false);
+    }
   };
 
   return (

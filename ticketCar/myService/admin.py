@@ -5,7 +5,7 @@ from django import forms
 from django.utils.safestring import mark_safe
 
 from .models import Car, Customer, Category, Complain, Chair, Staff, BStation, PriceT, Trip, Driver, User, Ticket, \
-    Invoice
+    Invoice, Buses
 
 
 # Register your models here.
@@ -42,14 +42,14 @@ class AppAdminSite(admin.AdminSite):
 #     model = Lesson.tags.through
 
 class TripForm(forms.ModelForm):
-    description = forms.CharField(widget=CKEditorUploadingWidget)
+    description = forms.CharField(widget=CKEditorUploadingWidget, required=False)
 
     class Meta:
         model = Trip
         fields = '__all__'
 
 class BStationForm(forms.ModelForm):
-    description = forms.CharField(widget=CKEditorUploadingWidget)
+    description = forms.CharField(widget=CKEditorUploadingWidget, required=False)
 
     class Meta:
         model = BStation
@@ -98,19 +98,25 @@ class BStationAdmin(MyServiceAdmin):
     list_filter = ['id', 'name']
     form = BStationForm
 
+
+class BusesAdmin(MyServiceAdmin):
+    list_display = ['id', 'destination', 'departure']
+    search_fields = ['id']
+    list_filter = ['id']
+
 class TripAdmin(MyServiceAdmin):
-    list_display = ['id', 'timeGo', 'dateGo']
+    list_display = ['id', 'timeGo', 'dateGo', 'price']
     search_fields = ['timeGo', 'dateGo']
     list_filter = ['timeGo', 'dateGo']
     form = TripForm
 
-    def save_model(self, request, obj, form, change):
-        # Thêm điều kiện kiểm tra trước khi lưu đối tượng
-        trip = Trip.object.filter(active=True, driver=request.data.get('driver'))
-
-        # if trip. != trip.:
-        #     # Lưu đối tượng vào cơ sở dữ liệu
-        #     obj.save()
+    # def save_model(self, request, obj, form, change):
+    #     # Thêm điều kiện kiểm tra trước khi lưu đối tượng
+    #     trip = Trip.object.filter(active=True, driver=request.data.get('driver'))
+    #
+    #     # if trip. != trip.:
+    #     #     # Lưu đối tượng vào cơ sở dữ liệu
+    #     #     obj.save()
 
 
 
@@ -151,23 +157,19 @@ class DriverAdmin(MyServiceAdmin):
 
 
 #gia ve
-class PriceTAdmin(MyServiceAdmin):
+class PriceTAdmin(admin.ModelAdmin):
     list_display = ['id', 'price', 'date_cate']
     search_fields = ['price', 'date_cate']
     list_filter = ['price', 'date_cate']
-    readonly_fields = ['price', 'date_cate']
+
+    # formfield_overrides = {
+    #     PriceT.price: {'widget': admin.widgets.AdminTextInputWidget(attrs={'type': 'number'})},}
 
     class Media:
         css = {
             'all': ('/static/css/style.css',)
         }
 
-    def bangLai(self, obj):
-        if obj:
-            return mark_safe(
-                '<img src="/static/{url}" width="120" />' \
-                    .format(url=obj.license.name)
-            )
 
 admin_site = AppAdminSite(name='Quản lý bán vé')
 
@@ -175,6 +177,7 @@ admin_site.register(Car, CarAdmin)
 admin_site.register(Category, CategoryAdmin)
 admin_site.register(Chair, ChairAdmin)
 admin_site.register(BStation, BStationAdmin)
+admin_site.register(Buses, BusesAdmin)
 admin_site.register(Trip, TripAdmin)
 admin_site.register(Staff, StaffAdmin)
 admin_site.register(Customer, CustomerAdmin)

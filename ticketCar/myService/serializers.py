@@ -32,7 +32,7 @@ class ChairSerializer(serializers.ModelSerializer):
     # xe = XeSerializer()
     class Meta:
         model = Chair
-        fields = ['id', 'name', 'car', 'active', 'price']
+        fields = ['id', 'name', 'car', 'active']
 
 
 
@@ -62,7 +62,7 @@ class BStationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BStation
-        fields = ['id', 'name', 'description', 'active', 'driver']
+        fields = ['id', 'name', 'active']
 
 class BusesSerializer(serializers.ModelSerializer):
     class Meta:

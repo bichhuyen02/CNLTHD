@@ -26,7 +26,7 @@ from myService.admin import admin_site
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Course API",
+        title="TicketCar API",
         default_version='v1',
         description="APIs for TicketCar",
         contact=openapi.Contact(email="ticketCar@gmail.com"),
@@ -48,6 +48,7 @@ router.register('staff', views.StaffViewSet, basename='staff')
 router.register('customer', views.CustomerViewSet, basename='customer')
 router.register('driver', views.DriverViewSet, basename='driver')
 router.register('user', views.UserViewSet, basename='user')
+router.register('bStation', views.BStationViewSet, basename='bStation')
 
 
 
