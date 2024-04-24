@@ -79,18 +79,6 @@ class ChairViewSet(viewsets.ViewSet, generics.ListAPIView):
     #         return [permissions.IsAuthenticated()]
     #     return self.permission_classes
     #
-    @action(methods=['patch'], detail=True)
-    def update_active(self, request, pk):
-        if self.action.__eq__(True):
-            chair = self.objects.update(active=False)
-            chair.save()
-        else:
-            chair = self.objects.update(active=True)
-            chair.save()
-
-        return Response(ChairSerializer(self, context={
-            'request': request
-        }).data, status=status.HTTP_200_OK)
 
 
 
@@ -109,7 +97,7 @@ class PriceTViewSet(viewsets.ViewSet, generics.ListAPIView):
             queries = queries.filter(subject__icontains=q)
         return queries
 
-class InvoiceViewSet(viewsets.ViewSet, generics.ListAPIView):
+class InvoiceViewSet(viewsets.ViewSet,  generics.CreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView, generics.ListAPIView, generics.RetrieveAPIView):
     queryset = Invoice.objects.all()
     serializer_class = InvoiceSerializer
 
@@ -120,7 +108,14 @@ class InvoiceViewSet(viewsets.ViewSet, generics.ListAPIView):
             queries = queries.filter(subject__icontains=q)
         return queries
 
-class TicketViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
+    @action(methods=['get'], detail=True)
+    def ticket(self, request, pk):
+        ticket = self.get_object().chair_set.all()
+        return Response(ChairSerializer(ticket, many=True, context={
+            'request': request
+        }).data, status=status.HTTP_200_OK)
+
+class TicketViewSet(viewsets.ViewSet,  generics.CreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView, generics.ListAPIView,  generics.RetrieveAPIView):
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
 
@@ -173,21 +168,35 @@ class BusesViewSet(viewsets.ViewSet, generics.ListAPIView):
 
     def get_queryset(self):
         queries = self.queryset
-        q = self.request.query_params.get('q')
-        if q:
-            queries = queries.filter(subject__icontains=q)
+
+        if self.action.__eq__('list'):
+            destination = self.request.query_params.get('destination')
+            if destination:
+                queries = queries.filter(destination=destination)
+
+            departure = self.request.query_params.get('departure')
+            if departure:
+                queries = queries.filter(departure=departure)
+
         return queries
 
-class TripViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView, generics.DestroyAPIView, generics.UpdateAPIView):
+class TripViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView):
     queryset = Trip.objects.all()
     serializer_class = TripSerializer
     permission_classes = [permissions.AllowAny()]
 
     def get_queryset(self):
         queries = self.queryset
-        q = self.request.query_params.get('q')
-        if q:
-            queries = queries.filter(subject__icontains=q)
+        if self.action.__eq__('list'):
+            buses = self.request.query_params.get('buses')
+            if buses:
+                queries = queries.filter(buses=buses)
+
+            dateGo = self.request.query_params.get('dateGo')
+            if dateGo:
+                queries = queries.filter(dateGo__icontains=dateGo)
+
+
         return queries
 
     def get_permissions(self):
@@ -197,10 +206,8 @@ class TripViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView
 
     @action(methods=['post'], url_path="ticket-onl", detail=True)
     def add_ticket_onl(self, request, pk):
-        invoice = Invoice.objects.create()
-        invoice.save()
-
-        ticket = Ticket.objects.create(customer=request.user, trip=self.get_object(), invoice=invoice)
+        ticket = Ticket.objects.create(chair= request.data.get('chair'), invoice= request.data.get('invoice'), customer=request.user,
+                                       trip=self.get_object())
         ticket.save()
 
         return Response(TicketSerializer(ticket, context={
@@ -209,10 +216,9 @@ class TripViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView
 
     @action(methods=['post'], url_path='ticket', detail=True)
     def ticket(self, request, pk):
-        invoice = Invoice.objects.create()
-        invoice.save()
 
-        ticket = Ticket.objects.create(staff=request.user, trip=self.get_object(), invoice=invoice)
+        ticket = Ticket.objects.create(chair= request.data.get('chair'), invoice= request.data.get('invoice'),customer= request.user,
+                                       trip=self.get_object())
         ticket.save()
 
         return Response(TicketSerializer(ticket, context={
@@ -254,7 +260,7 @@ class TripViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.ListAPIView
 
 
 # account
-class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
+class UserViewSet(viewsets.ViewSet,  generics.CreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView, generics.ListAPIView , generics.RetrieveAPIView):
     queryset = User.objects.filter(is_active=True).all()
     serializer_class = UserSerializer
     parser_classes = [parsers.MultiPartParser,  parsers.JSONParser]
@@ -277,7 +283,7 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView):
             "request": request
         }).data, status=status.HTTP_200_OK)
 
-class DriverViewSet(viewsets.ViewSet, generics.CreateAPIView):
+class DriverViewSet(viewsets.ViewSet,  generics.CreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView, generics.ListAPIView):
     queryset = Driver.objects.all()
     serializer_class = DriverSerializer
     # parser_classes = [parsers.MultiPartParser, parsers.JSONParser]
@@ -299,7 +305,7 @@ class DriverViewSet(viewsets.ViewSet, generics.CreateAPIView):
     #         "request": request
     #     }).data, status=status.HTTP_200_OK)
 
-class CustomerViewSet(viewsets.ViewSet, generics.CreateAPIView):
+class CustomerViewSet(viewsets.ViewSet,  generics.CreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView, generics.ListAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
     # parser_classes = [parsers.MultiPartParser, parsers.JSONParser]
@@ -321,7 +327,7 @@ class CustomerViewSet(viewsets.ViewSet, generics.CreateAPIView):
     #         "request": request
     #     }).data, status=status.HTTP_200_OK)
 
-class StaffViewSet(viewsets.ViewSet, generics.CreateAPIView):
+class StaffViewSet(viewsets.ViewSet,  generics.CreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView, generics.ListAPIView):
     queryset = Staff.objects.all()
     serializer_class = StaffSerializer
     # parser_classes = [parsers.MultiPartParser, parsers.JSONParser]
@@ -351,7 +357,7 @@ class StaffViewSet(viewsets.ViewSet, generics.CreateAPIView):
 
 
 # complain
-class ComplainViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView, generics.ListAPIView):
+class ComplainViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView, generics.ListAPIView, generics.RetrieveAPIView):
     queryset = Complain.objects.all()
     serializer_class = ComplainSerializer
     permission_classes = [perms.OwnerPermission]

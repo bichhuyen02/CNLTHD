@@ -40,15 +40,22 @@ router = routers.DefaultRouter()
 router.register('categories', views.CategoryViewSet, basename='categories')
 router.register('cars', views.CarViewSet, basename='cars')
 router.register('chairs', views.ChairViewSet, basename='chairs')
+
 router.register('priceT', views.PriceTViewSet, basename='priceT')
+router.register('invoice', views.InvoiceViewSet, basename='invoice')
+router.register('ticket', views.TicketViewSet, basename='ticket')
+
 router.register('buses', views.BusesViewSet, basename='buses')
 router.register('trips', views.TripViewSet, basename='trips')
+router.register('bStation', views.BStationViewSet, basename='bStation')
+
 router.register('complain', views.ComplainViewSet, basename='complain')
+
 router.register('staff', views.StaffViewSet, basename='staff')
 router.register('customer', views.CustomerViewSet, basename='customer')
 router.register('driver', views.DriverViewSet, basename='driver')
 router.register('user', views.UserViewSet, basename='user')
-router.register('bStation', views.BStationViewSet, basename='bStation')
+
 
 
 

@@ -104,7 +104,7 @@ class Buses(BaseModel):
         unique_together = ('destination', 'departure')
 
     def __str__(self):
-        return "Đi: {}, Đến: {}".format(self.destination.name, self.departure.name)
+        return "Đi: {}, Đến: {}".format(self.departure.name, self.destination.name)
 
 class Trip(BaseModel):
     timeGo = models.TimeField(blank=True)
@@ -127,8 +127,8 @@ class Invoice(BaseModel):
         return str(self.amout)
 
 class Ticket(BaseModel):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, blank=False)
+    customer = models.ForeignKey(User, related_name='ticket_customer', on_delete=models.CASCADE)
+    staff = models.ForeignKey(User, related_name='ticket_staff', on_delete=models.CASCADE)
     chair = models.ForeignKey(Chair, on_delete=models.CASCADE)
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE)
