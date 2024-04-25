@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react-native'
-import Apis, { endpoints } from '../../config/Apis'
+import Apis, { authApi, endpoints } from '../../config/Apis'
 import { SelectList } from 'react-native-dropdown-select-list'
 import { ActivityIndicator, Button } from 'react-native-paper'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 
@@ -29,7 +30,7 @@ export default ProfileView = () => {
     const loadTripDetail = async () => {
       let trip = await Apis.get(endpoints['tripDetail'](1));
       setTrip(trip.data)
-      
+
     }
 
     const loadChair = async () => {
@@ -41,12 +42,14 @@ export default ProfileView = () => {
     loadChair();
   }, []);
   console.info(trips)
-  const ticket_onl = async(chair)=>{
+  const ticket_onl = async (chair) => {
     let invoice = await Apis.post(endpoints['invoice'], {
       "amout": 0
     });
-    let ticket = await Apis.post(endpoints['bookTicket_onl'](1),{
-      "invoice": invoice,
+    console.info(invoice.data)
+    const access_token = await AsyncStorage.getItem('access-token');
+    let ticket = await authApi(access_token).post(endpoints['bookTicket_onl'](1), {
+      "invoice": invoice.id,
       "chair": chair
     });
     console.info(ticket.data)
@@ -65,31 +68,20 @@ export default ProfileView = () => {
       </View>
       {trips === null ? <ActivityIndicator /> : <>
         <Text key={trips.id}>{trips.dateGo}</Text>
-
         {chairs === null ? <ActivityIndicator /> : <>
-          {chairs.map(c => <View style={styles.body}>
-            <FlatList
-              style={styles.container}
-              enableEmptySections={true}
-              data={options}
-              keyExtractor={item => item.id}
-              renderItem={({ item }) => {
-                return (
-                  <TouchableOpacity key={c.id} onPress={()=>ticket_onl(c)}>
-                    <View style={styles.box}>
-                      <Image style={styles.icon} source={{ uri: item.image }} />
-                      <Text style={styles.title}key={c.id}>{c.name}</Text>
-                      <Image
-                        style={styles.btn}
-                        source={{ uri: 'https://img.icons8.com/customer/office/40' }}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                )
-              }}
-            />
+          <View>
+            {chairs.map(c => <TouchableOpacity key={c.id} onPress={() => ticket_onl(c.id)}>
+              <View style={styles.box}>
+                <Image style={styles.icon} source={{ uri: 'https://img.icons8.com/color/70/000000/cottage.png' }} />
+                <Text style={styles.title} >{c.name}</Text>
+                <Image
+                  style={styles.btn}
+                  source={{ uri: 'https://img.icons8.com/customer/office/40' }}
+                />
+              </View>
+            </TouchableOpacity>
+            )}
           </View>
-          )}
         </>}
       </>}
     </View>

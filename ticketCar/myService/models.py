@@ -12,11 +12,11 @@ role_date = sorted([(item, item) for item in role_date])
 
 #account
 class User(AbstractUser):
+    phone = models.CharField(max_length=10, null=True, unique=True)
     avatar = models.ImageField(upload_to="ava/%Y/%m", null=True)
     role = models.CharField(choices=role_choices, max_length=20, default="Customer")
 
 class Staff(models.Model):
-    phone = models.CharField(max_length=10, null=True)
     birth = models.DateField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -24,7 +24,6 @@ class Staff(models.Model):
         return self.user.username
 
 class Customer(models.Model):
-    phone = models.CharField(max_length=10, null=True)
     birth = models.DateField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -32,7 +31,6 @@ class Customer(models.Model):
         return self.user.username
 
 class Driver(models.Model):
-    phone = models.CharField(max_length=10, null=True)
     birth = models.DateField()
     license = models.ImageField(upload_to="license/%Y/%m", null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -90,11 +88,20 @@ class Chair(BaseModel):
 
 
 #chuyến xe
-class BStation(BaseModel):
-    name = models.CharField(max_length=50, null=True)
+class Province(BaseModel):
+    name = models.CharField(max_length=100)
     description = RichTextField(null=True)
     def __str__(self):
         return self.name
+
+class BStation(BaseModel):
+    name = models.CharField(max_length=50, null=True)
+    province = models.ForeignKey(Province, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        unique_together = ('name', 'province')
 
 class Buses(BaseModel):
     destination = models.ForeignKey(BStation, related_name='trip_destination', on_delete=models.CASCADE, blank=True)
@@ -105,6 +112,12 @@ class Buses(BaseModel):
 
     def __str__(self):
         return "Đi: {}, Đến: {}".format(self.departure.name, self.destination.name)
+
+class Bus_BSta(BaseModel):
+    buses = models.ForeignKey(Buses, on_delete=models.CASCADE)
+    bStation = models.ForeignKey(BStation, on_delete=models.CASCADE)
+    def __str__(self):
+        return "Chuyến: {}, Bến: {}".format(self.buses, self.bSatation.name)
 
 class Trip(BaseModel):
     timeGo = models.TimeField(blank=True)
@@ -127,8 +140,8 @@ class Invoice(BaseModel):
         return str(self.amout)
 
 class Ticket(BaseModel):
-    customer = models.ForeignKey(User, related_name='ticket_customer', on_delete=models.CASCADE)
-    staff = models.ForeignKey(User, related_name='ticket_staff', on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE,default=1)
     chair = models.ForeignKey(Chair, on_delete=models.CASCADE)
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE)
@@ -143,6 +156,6 @@ class Ticket(BaseModel):
 class Complain(BaseModel):
     content = models.CharField(max_length=255, blank=True)
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    customer = models.ForeignKey(User, on_delete=models.CASCADE)
     def __str__(self):
         return self.content

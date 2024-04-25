@@ -1,5 +1,5 @@
 from .models import Car, Customer, Category, Complain, Chair, Staff, BStation, PriceT, Trip, Driver, User, Ticket, \
-    Invoice, Buses
+    Invoice, Buses, Province, Bus_BSta
 from rest_framework import serializers
 
 
@@ -32,7 +32,7 @@ class ChairSerializer(serializers.ModelSerializer):
     # xe = XeSerializer()
     class Meta:
         model = Chair
-        fields = ['id', 'name', 'car', 'active']
+        fields = '__all__'
 
 
 
@@ -58,16 +58,28 @@ class TicketSerializer(serializers.ModelSerializer):
 
 
 #chuyen xe
+class ProvinceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Province
+        fields = ['id', 'name', 'active']
+
 class BStationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BStation
-        fields = ['id', 'name', 'active']
+        fields = ['id', 'name', 'active', 'province']
 
 class BusesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Buses
         fields = ['id', 'destination', 'departure', 'active']
+
+class Bus_BStaSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Bus_BSta
+        fields = ['id', 'buses', 'active', 'bStation']
 
 class TripSerializer(serializers.ModelSerializer):
     # diemDen = TagSerializer(many=True)
@@ -87,7 +99,7 @@ class UserSerializer(serializers.ModelSerializer):
             }
         }
         model = User
-        fields = ['first_name', 'last_name', 'email', 'username', 'password', 'avatar', 'role']
+        fields = ['last_name', 'username', 'password', 'avatar', 'role', 'phone']
 
     def create(self, validated_data):
         data = validated_data.copy()
@@ -101,7 +113,7 @@ class StaffSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Staff
-        fields = ['birth', 'phone', 'user']
+        fields = ['birth', 'user']
 
 class DriverSerializer(serializers.ModelSerializer):
     bangLai = serializers.SerializerMethodField(source='image')
@@ -116,13 +128,13 @@ class DriverSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Driver
-        fields = ['birth', 'phone', 'user', 'bangLai']
+        fields = ['birth', 'user', 'bangLai']
 
 class CustomerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Customer
-        fields = ['birth', 'phone', 'user']
+        fields = ['birth', 'user']
 
 
 

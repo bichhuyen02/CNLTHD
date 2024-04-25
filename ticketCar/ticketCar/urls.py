@@ -45,8 +45,10 @@ router.register('priceT', views.PriceTViewSet, basename='priceT')
 router.register('invoice', views.InvoiceViewSet, basename='invoice')
 router.register('ticket', views.TicketViewSet, basename='ticket')
 
+router.register('province', views.ProvinceViewSet, basename='province')
 router.register('buses', views.BusesViewSet, basename='buses')
 router.register('trips', views.TripViewSet, basename='trips')
+router.register('bus_bSta', views.Bus_BStaViewSet, basename='bus_bSta')
 router.register('bStation', views.BStationViewSet, basename='bStation')
 
 router.register('complain', views.ComplainViewSet, basename='complain')
