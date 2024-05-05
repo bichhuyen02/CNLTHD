@@ -3,9 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons'; // Import icon từ thư viện Expo
 import MyContext from '../../config/MyContext';
-import { client_id, client_secret } from '../../key/Key_app'
-import Apis, { authApi, endpoints } from '../../config/Apis';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {client_id, client_secret} from '../../key/Key_app'
+import { authApi, endpoints } from '../../config/Apis';
 
 
 const Signin = ({ navigation }) => {
@@ -18,41 +17,40 @@ const Signin = ({ navigation }) => {
   const handleLogin = async () => {
     setLoading(true);
     try {
-      let res = await Apis.post(endpoints['login'], {
-        "username": username,
-        "password": password,
-        "client_id": client_id,
-        "client_secret": client_secret,
-        "grant_type": "password"
-      });
+        let res = await Apis.post(endpoints['login'], {
+          "username": username, 
+          "password": password,
+          "client_id": client_id,
+          "client_secret": client_secret,
+          "grant_type": "password"
+        });
 
-      console.info(res.data)
+        console.info(res.data)
 
-      await AsyncStorage.setItem('access-token', res.data.access_token)
-      let user = await authApi(res.data.access_token).get(endpoints['current_user']);
-      console.info(user.data)
-      dispatch({
-        'type': 'login',
-        'payload': {
-          'username': user.data.username
-        }
-      })
-      console.info("thanh cong")
-      navigation.navigate('acc');
+        await AsyncStorage.setItem('access-token', res.data.access_token)
+        let user = await authApi(res.data.access_token).get(endpoints['current_user']);
+        console.info(user.data)
+        dispatch({
+                    'type': 'login',
+                    'payload': {
+                        'username': user.data.username
+                    }
+                })
+        navigation.navigate('Trang chủ');    
     } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
+        console.error(error);
+    } finally{
+        setLoading(false);
     }
   };
 
   return (
-    <LinearGradient colors={['#2D99AE', '#764ba2']} style={styles.container}
+    <LinearGradient colors={['#2D99AE', '#764ba2']} style={styles.container} 
       start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
       <View style={styles.formContainer}>
         <Text style={styles.welcomeText}>Welcome!!</Text>
         <View style={[styles.inputView, styles.inputBorder]}>
-          <AntDesign name="user" size={24} color="#fff" style={styles.icon} />
+        <AntDesign name="user" size={24} color="#fff" style={styles.icon} />
           <TextInput
             style={styles.inputText}
             placeholder="Tên đăng nhập"
@@ -61,7 +59,7 @@ const Signin = ({ navigation }) => {
           />
         </View>
         <View style={[styles.inputView, styles.inputBorder]}>
-          <AntDesign name="lock" size={24} color="#fff" style={styles.icon} />
+        <AntDesign name="lock" size={24} color="#fff" style={styles.icon} />
           <TextInput
             style={styles.inputText}
             placeholder="Mật khẩu"
@@ -101,7 +99,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     paddingHorizontal: 20,
     paddingTop: 40,
-    borderColor: '#fff',
+    borderColor: '#fff', 
     borderStyle: 'solid',
   },
   inputView: {
@@ -117,7 +115,7 @@ const styles = StyleSheet.create({
     height: 50,
     color: '#fff',
     flex: 1,
-
+    
   },
 
   checkboxContainer: {

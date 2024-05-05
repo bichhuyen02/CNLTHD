@@ -1,22 +1,22 @@
 import axios from "axios";
 
 const HOST = "https://bichhuyen02.pythonanywhere.com"
+// const HOST = "http://127.0.0.1:8000"
 
 export const endpoints = {
     'categories': "/categories/",
-    'chair': (car_id) => `/cars/${car_id}/chair/`,
-
     'bStation': "/bStation/",
     'buses': "/buses/",
-  
+    'chair': (car_id) => `/cars/${car_id}/chair/`,
     'trip': "/trips/",
-    'tripDetail': (trip_id) => `/trips/${trip_id}/`,
+    'tripDetail': (trip_id) => `/trip/${trip_id}/`,
+    'login': '/o/token/',
+    'bookTicket_onl': (trip_id) => `/trip/${trip_id}/ticket-onl`,
+ 
+    'lessons': (course_Id) => `/courses/${course_Id}/lessons/`,
+    'lessonDetail': (lessonId) => `/lessons/${lessonId}/`,
 
-    'invoice': `/invoice/`,
-    'invoice_ticket':(invoice_id)=>`/invoice/${invoice_id}/ticket/`,
-    'bookTicket_onl': (trip_id) => `/trips/${trip_id}/ticket-onl/`,
-
-
+    
     'login': '/o/token/',
     'current_user': '/user/current-user/',
     'register': '/user/',

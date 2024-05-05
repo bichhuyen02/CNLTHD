@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react-native'
-import Apis, { authApi, endpoints } from '../../config/Apis'
+import Apis, { endpoints } from '../../config/Apis'
 import { SelectList } from 'react-native-dropdown-select-list'
-import { ActivityIndicator, Button } from 'react-native-paper'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 
-
-
-export default ProfileView = () => {
+export default ProfileView = (props) => {
   const data = [
     { id: 1, image: 'https://img.icons8.com/color/70/000000/cottage.png', title: 'Order' },
     {
@@ -19,44 +15,49 @@ export default ProfileView = () => {
     { id: 4, image: 'https://img.icons8.com/color/70/000000/facebook-like.png', title: 'Download' },
     { id: 5, image: 'https://img.icons8.com/color/70/000000/shutdown.png', title: 'Edit' },
   ]
-
-
+  
+  const [selected, setSelected] = useState("");
   const [options, setOptions] = useState(data)
-  const [trips, setTrip] = useState(null)
-  const [chairs, setChair] = useState(null)
+  const [bStation, setBStation] = useState(null)
+  const [buses, setBuses] = useState(null);
+  const [trip, setTrip] = useState(null)
 
+  useEffect(()=>{
+    const loadBStation = async()=>{
+      let bStation = await Apis.get(endpoints['bStation'])
+      console.info(bStation.data);
+      setBStation(bStation.data)
+    };
 
-  useEffect(() => {
-    const loadTripDetail = async () => {
-      let trip = await Apis.get(endpoints['tripDetail'](1));
-      setTrip(trip.data)
+    const loadBuses = async()=>{
+      let buses = await Apis.get(endpoints['buses'], 
+                       {params:{destination: bs_id, departure: bs_id}});
+      console.info(buses.data)
+      setBuses(buses.data);
+    };
 
-    }
+    const loadtrip = async()=>{
+      let trips = await Apis.get(endpoints['trip'], 
+                              {params: { car: car_id, buses: bus_id }});
+            console.info(trips.data)
+            setTrip(trips.data);
+    };
 
-    const loadChair = async () => {
-      let chair = await Apis.get(endpoints['chair'](1))
-      setChair(chair.data)
-      console.info(chairs.data)
-    }
-    loadTripDetail();
-    loadChair();
+    loadBStation();
+    loadBuses();
+    loadtrip();
   }, []);
-  console.info(trips)
-  const ticket_onl = async (chair) => {
-    let invoice = await Apis.post(endpoints['invoice'], {
-      "amout": 0
-    });
-    console.info(invoice.data)
-    const access_token = await AsyncStorage.getItem('access-token');
-    let ticket = await authApi(access_token).post(endpoints['bookTicket_onl'](1), {
-      "invoice": invoice.id,
-      "chair": chair
-    });
-    console.info(ticket.data)
-  }
 
+  console.info(selected);
   return (
-    <View style={styles.container}>
+    <View {...props}style={styles.container}>
+      <View>
+      <SelectList 
+        setSelected={(val) => setSelected(val)} 
+        data={bStation.map(b=>[{key:b.id, value: b.name}])}
+        save="key"
+    />
+      </View>
       <View style={styles.header}>
         <View style={styles.headerContent}>
           <Image
@@ -66,24 +67,29 @@ export default ProfileView = () => {
           <Text style={styles.name}>Jane Doe</Text>
         </View>
       </View>
-      {trips === null ? <ActivityIndicator /> : <>
-        <Text key={trips.id}>{trips.dateGo}</Text>
-        {chairs === null ? <ActivityIndicator /> : <>
-          <View>
-            {chairs.map(c => <TouchableOpacity key={c.id} onPress={() => ticket_onl(c.id)}>
-              <View style={styles.box}>
-                <Image style={styles.icon} source={{ uri: 'https://img.icons8.com/color/70/000000/cottage.png' }} />
-                <Text style={styles.title} >{c.name}</Text>
-                <Image
-                  style={styles.btn}
-                  source={{ uri: 'https://img.icons8.com/customer/office/40' }}
-                />
-              </View>
-            </TouchableOpacity>
-            )}
-          </View>
-        </>}
-      </>}
+
+      <View style={styles.body}>
+        <FlatList
+          style={styles.container}
+          enableEmptySections={true}
+          data={options}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => {
+            return (
+              <TouchableOpacity>
+                <View style={styles.box}>
+                  <Image style={styles.icon} source={{ uri: item.image }} />
+                  <Text style={styles.title}>{item.title}</Text>
+                  <Image
+                    style={styles.btn}
+                    source={{ uri: 'https://img.icons8.com/customer/office/40' }}
+                  />
+                </View>
+              </TouchableOpacity>
+            )
+          }}
+        />
+      </View>
     </View>
   )
 }
@@ -126,7 +132,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
     backgroundColor: '#FFFFFF',
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems:'center',
   },
   username: {
     color: '#20B2AA',
