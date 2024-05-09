@@ -30,3 +30,5 @@
 7. fix
 - npm audit fix --force
 - python manage.py migrate oauth2_provider
+- keytool -list -v -alias androiddebugkey -keystore D:\SellTicket\android\app\debug.keystore
+- pip -- freeze > requirements.txt 

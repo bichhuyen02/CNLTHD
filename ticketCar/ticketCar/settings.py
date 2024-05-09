@@ -24,10 +24,12 @@ MEDIA_ROOT = '%s/myService/static/' % BASE_DIR
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-@2p0fsn$mtuj*ay-^1p-4gos%7#6xwvkd727!%rc(s25r3iq8@'
 
+DEBUG = True
 
-Client_id = 'giKPdDSiFGtLG0JfzhgxZ0MHwubYmLVFqXte33Dd'
-Client_secret = 'YGpXRhe2qS8d41hLXwaHgtQ3LTxqEeS3M2Lo50Wo3zG3hZzmQmeTY7Gta39aUUj2TwN8oDMBuXNZZy5K4pWplruEDBVeH0c7NOozQ3kC0ibwA7WOJQcHmiW2245IGUmW'
+X_FRAME_OPTIONS = "SAMEORIGIN"
+SILENCED_SYSTEM_CHECKS = ["security.W019"]
 
+ALLOWED_HOSTS = []
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -35,17 +37,21 @@ REST_FRAMEWORK = {
     )
 }
 
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
 CKEDITOR_UPLOAD_PATH = "images/ticketCar/"
 
-# Application definition
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'tsanthibichhuyen251@gmail.com'
+EMAIL_HOST_PASSWORD = 'khainguyenty21'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'tsanthibichhuyen200@gmail.com'
+
+# Application definition
 INSTALLED_APPS = [
+    'admin_interface',
+    'colorfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

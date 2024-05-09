@@ -3,7 +3,7 @@ import {StyleSheet,View, Text, TouchableOpacity, Image, ScrollView, StatusBar, T
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
 import CarouselTrending from './CarouselTrending';
-export default Home = ({navigation}) => {
+export default Home = ({route, navigation}) => {
   const data = [
     {
         image: require('./Image/CV.jpg')
@@ -15,6 +15,7 @@ export default Home = ({navigation}) => {
         image: require('./Image/hinhCV1.jpg')
     },
 ];
+  const {lessonId} = route.params
 
   return(
         <View style={{flex:1}}>

@@ -4,7 +4,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons'; // Import icon từ thư viện Expo
 import MyContext from '../../config/MyContext';
 import {client_id, client_secret} from '../../key/Key_app'
-import { authApi, endpoints } from '../../config/Apis';
+import Apis, { authApi, endpoints } from '../../config/Apis';
+import { AsyncStorage } from 'react-native';
 
 
 const Signin = ({ navigation }) => {
@@ -36,7 +37,7 @@ const Signin = ({ navigation }) => {
                         'username': user.data.username
                     }
                 })
-        navigation.navigate('Trang chủ');    
+        navigation.navigate('TrangChu');    
     } catch (error) {
         console.error(error);
     } finally{

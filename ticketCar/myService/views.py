@@ -5,15 +5,16 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from . import perms
-from .models import Car, Customer, Category, Complain, Chair, Staff, BStation, PriceT, Trip, Driver, User, Invoice, \
-    Ticket, Buses, Province, Bus_BSta
+from .models import Car, Customer, Category, Complain, Staff, BStation, PriceT, Trip, Driver, User, Invoice, \
+    Ticket, Province, Bues, TripCar
 from rest_framework import viewsets, generics, status, permissions, parsers
 from .paginator import CoursePaginator, ChairPaginator
 from . import perms
-from .serializers import CategorySerializer, CarSerializer, ChairSerializer, PriceTSerializer, BStationSerializer, \
+from .serializers import CategorySerializer, CarSerializer, PriceTSerializer, BStationSerializer, \
     TripSerializer, UserSerializer, DriverSerializer, CustomerSerializer, StaffSerializer, ComplainSerializer, \
-    InvoiceSerializer, TicketSerializer, BusesSerializer, ProvinceSerializer, Bus_BStaSerializer
-
+    InvoiceSerializer, TicketSerializer, ProvinceSerializer, BuesSerializer, TripCarSerializer
+from django.core.files.storage import default_storage
+from .firebase import storage
 
 
 
@@ -47,9 +48,6 @@ class CarViewSet(viewsets.ViewSet, generics.ListAPIView):
             'request': request
         }).data, status=status.HTTP_200_OK)
 
-class ChairViewSet(viewsets.ViewSet, generics.ListAPIView):
-    queryset = Chair.objects.all()
-    serializer_class = ChairSerializer
 
 
 
@@ -91,7 +89,6 @@ class TicketViewSet(viewsets.ViewSet, generics.DestroyAPIView, generics.ListAPIV
 
 
 
-
 # chuyen xe
 class ProvinceViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = Province.objects.all()
@@ -120,43 +117,38 @@ class BStationViewSet(viewsets.ViewSet, generics.ListAPIView):
                 queries = queries.filter(province=province)
 
         return queries
-
-class BusesViewSet(viewsets.ViewSet, generics.ListAPIView):
-    queryset = Buses.objects.all()
-    serializer_class = BusesSerializer
-
-    def get_queryset(self):
-        queries = self.queryset
-
-        if self.action.__eq__('list'):
-            destination = self.request.query_params.get('destination')
-            if destination:
-                queries = queries.filter(destination=destination)
-
-            departure = self.request.query_params.get('departure')
-            if departure:
-                queries = queries.filter(departure=departure)
-
-        return queries
-
-class Bus_BStaViewSet(viewsets.ViewSet, generics.ListAPIView):
-    queryset = Bus_BSta.objects.all()
-    serializer_class = Bus_BStaSerializer
+class BuesViewSet(viewsets.ViewSet, generics.ListAPIView):
+    queryset = Bues.objects.all()
+    serializer_class = BuesSerializer
 
     def get_queryset(self):
         queries = self.queryset
-
         if self.action.__eq__('list'):
-            buses = self.request.query_params.get('buses')
-            if buses:
-                queries = queries.filter(buses=buses)
+            name = self.request.query_params.get('name')
+            if name:
+                queries = queries.filter(name=name)
 
-            bStation = self.request.query_params.get('bStation')
-            if bStation:
-                queries = queries.filter(bStation=bStation)
+            province = self.request.query_params.get('province')
+            if province:
+                queries = queries.filter(province=province)
 
         return queries
+class TripCarViewSet(viewsets.ViewSet, generics.ListAPIView):
+    queryset = TripCar.objects.all()
+    serializer_class = TripCarSerializer
 
+    def get_queryset(self):
+        queries = self.queryset
+        if self.action.__eq__('list'):
+            name = self.request.query_params.get('name')
+            if name:
+                queries = queries.filter(name=name)
+
+            province = self.request.query_params.get('province')
+            if province:
+                queries = queries.filter(province=province)
+
+        return queries
 class TripViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView):
     queryset = Trip.objects.all()
     serializer_class = TripSerializer
@@ -183,10 +175,9 @@ class TripViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIVi
 
     @action(methods=['post'], url_path="ticket-onl", detail=True)
     def add_ticket_onl(self, request, pk):
-        chair = Chair.objects.get(id=request.data.get('chair'))
         invoice = Invoice.objects.get(id=request.data.get('invoice'))
         customer = Customer.objects.get(id=request.user.id)
-        ticket = Ticket.objects.create(chair= chair, invoice= invoice, customer=customer,
+        ticket = Ticket.objects.create( invoice= invoice, customer=customer,
                                        trip=self.get_object())
         ticket.save()
 
@@ -196,11 +187,10 @@ class TripViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIVi
 
     @action(methods=['post'], url_path='ticket', detail=True)
     def ticket(self, request, pk):
-        chair = Chair.objects.get(id=request.data.get('chair'))
         invoice = Invoice.objects.get(id=1)
         phones = request.data.get('phone')
         user = Customer.get_or_create(phone=phones.strip())
-        ticket = Ticket.objects.create(chair=chair, invoice=invoice, staff=request.user,
+        ticket = Ticket.objects.create(invoice=invoice, staff=request.user,
                                        trip=self.get_object())
         ticket.save()
 
@@ -241,7 +231,7 @@ class TripViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIVi
 
 
 # account
-class UserViewSet(viewsets.ViewSet,  generics.CreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView, generics.ListAPIView , generics.RetrieveAPIView):
+class UserViewSet(viewsets.ViewSet, generics.UpdateAPIView, generics.DestroyAPIView, generics.ListAPIView , generics.RetrieveAPIView):
     queryset = User.objects.filter(is_active=True).all()
     serializer_class = UserSerializer
     parser_classes = [parsers.MultiPartParser,  parsers.JSONParser]
@@ -264,7 +254,7 @@ class UserViewSet(viewsets.ViewSet,  generics.CreateAPIView, generics.UpdateAPIV
             "request": request
         }).data, status=status.HTTP_200_OK)
 
-    @action(methods=['get'], detail=True)
+    @action(methods=['post'], detail=True)
     def info(self, request):
         l = self.get_object().all
         if l.role.__eq__('Customer'):
@@ -284,6 +274,29 @@ class UserViewSet(viewsets.ViewSet,  generics.CreateAPIView, generics.UpdateAPIV
                     return Response(DriverSerializer(l, many=True, context={
                         'request': request
                     }).data, status=status.HTTP_200_OK)
+
+    @action(methods=['post'], detail=False)
+    def user(self, request):
+        image = request.data.get('avatar')
+        if image:
+            # Convert the InMemoryUploadedFile to string
+            filename = image.name
+
+            # Upload the image to Firebase Storage
+            file_path = default_storage.save('tmp/' + filename, image)
+            with default_storage.open(file_path, 'rb') as file:
+                storage.child("ava/" + filename).put(file)
+
+            download_url = storage.child("ava/" + filename).get_url(None)
+            print(download_url)
+            image = download_url
+            user = User.objects.create(avatar=download_url, username=request.data.get('username'), password=request.data.get('password'),
+            first_name=request.data.get('first_name'), last_name=request.data.get('last_name'), email=request.data.get('email'), phone=request.data.get('phone'))
+            user.save()
+            Customer.objects.create(user=user)
+            return Response(UserSerializer(user, context={'request': request}).data, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
 class DriverViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = Driver.objects.all()

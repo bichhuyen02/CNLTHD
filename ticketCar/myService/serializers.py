@@ -1,5 +1,5 @@
-from .models import Car, Customer, Category, Complain, Chair, Staff, BStation, PriceT, Trip, Driver, User, Ticket, \
-    Invoice, Buses, Province, Bus_BSta
+from .models import Car, Customer, Category, Complain, Staff, BStation, PriceT, Trip, Driver, User, Ticket, \
+    Invoice, Province, Bues, TripCar
 from rest_framework import serializers
 
 
@@ -11,10 +11,8 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'name', 'active']
-
 class CarSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField(source='image')
-    # loaiXe = LoaiXeSerializer()
 
     def get_image(self, obj):
         request = self.context.get('request')
@@ -26,13 +24,8 @@ class CarSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Car
-        fields = ['id', 'licensePlates', 'category', 'image', 'active']
+        fields = ['id', 'licensePlates', 'category', 'image', 'active', 'quantity']
 
-class ChairSerializer(serializers.ModelSerializer):
-    # xe = XeSerializer()
-    class Meta:
-        model = Chair
-        fields = '__all__'
 
 
 
@@ -42,17 +35,15 @@ class PriceTSerializer(serializers.ModelSerializer):
     class Meta:
         model = PriceT
         fields = ['id', 'price', 'date_cate', 'active']
-
 class InvoiceSerializer(serializers.ModelSerializer):
      class Meta:
          model = Invoice
          fields = '__all__'
-
 class TicketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket
-        fields = ['id', 'staff', 'customer', 'chair', 'active', 'created_date', 'updated_date', 'invoice']
+        fields = ['id', 'staff', 'customer', 'active', 'created_date', 'updated_date', 'invoice', 'quantity']
 
 
 
@@ -63,29 +54,24 @@ class ProvinceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Province
         fields = ['id', 'name', 'active']
-
 class BStationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BStation
         fields = ['id', 'name', 'active', 'province']
-
-class BusesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Buses
-        fields = ['id', 'destination', 'departure', 'active']
-
-class Bus_BStaSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Bus_BSta
-        fields = ['id', 'buses', 'active', 'bStation']
-
 class TripSerializer(serializers.ModelSerializer):
-    # diemDen = TagSerializer(many=True)
     class Meta:
         model = Trip
         fields = '__all__'
+class TripCarSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TripCar
+        fields = '__all__'
+class BuesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bues
+        fields = '__all__'
+
 
 
 
@@ -108,13 +94,11 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
-
 class StaffSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Staff
         fields = ['birth', 'user']
-
 class DriverSerializer(serializers.ModelSerializer):
     bangLai = serializers.SerializerMethodField(source='image')
 
@@ -129,7 +113,6 @@ class DriverSerializer(serializers.ModelSerializer):
     class Meta:
         model = Driver
         fields = ['birth', 'user', 'bangLai']
-
 class CustomerSerializer(serializers.ModelSerializer):
 
     class Meta:

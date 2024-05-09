@@ -1,6 +1,6 @@
 import { AntDesign, FontAwesome, FontAwesome5, FontAwesome6, Ionicons, MaterialCommunityIcons, MaterialIcons, Octicons } from '@expo/vector-icons';
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default Pay = () => {
     const [count, setCount] = useState(0);
@@ -34,6 +34,7 @@ export default Pay = () => {
     };
 
     return (
+        <ScrollView>
         <View style={{ flex: 1 }}>
             {/* thong tin nguoi dat ve xe */}
             <View style={styles.ItemUser}>
@@ -157,6 +158,7 @@ export default Pay = () => {
                 <Text style={{ color: 'white', fontSize: 18, textAlign: 'center' }}>Đặt vé</Text>
             </TouchableOpacity>
         </View>
+        </ScrollView>
     )
 }
 
