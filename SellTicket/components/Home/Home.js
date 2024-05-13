@@ -15,7 +15,7 @@ export default Home = ({route, navigation}) => {
         image: require('./Image/hinhCV1.jpg')
     },
 ];
-  const {lessonId} = route.params
+  // const {lessonId} = route.params
 
   return(
         <View style={{flex:1}}>

@@ -44,14 +44,16 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'tsanthibichhuyen251@gmail.com'
-EMAIL_HOST_PASSWORD = 'khainguyenty21'
+EMAIL_HOST_PASSWORD = 'lpfs slmj matb vldw'
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'tsanthibichhuyen200@gmail.com'
+EMAIL_CHARSET = 'utf-8'
+# DEFAULT_FROM_EMAIL = 'tsanthibichhuyen200@gmail.com'
 
 # Application definition
 INSTALLED_APPS = [
     'admin_interface',
     'colorfield',
+    'django.core.mail',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -141,7 +143,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

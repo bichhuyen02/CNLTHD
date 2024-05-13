@@ -2,6 +2,7 @@ import uuid
 
 from admin_interface.models import Theme
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
+from django.conf import settings
 from django.contrib import admin, messages
 from django import forms
 from django.contrib.auth.models import Group
@@ -18,21 +19,23 @@ from django.core.mail import send_mail
 
 
 class MyServiceAdmin(admin.ModelAdmin):
+    def get_model_perms(self, request):
+        # Lấy thông tin người dùng đăng nhập
+        user = request.user
 
+        # Kiểm tra quyền truy cập của người dùng
+        if user.role.__eq__('Admin'):
+            # Người dùng là superuser, không áp dụng exclude
+            return {}
+        else:
+            # Người dùng không phải là superuser, áp dụng exclude
+            return {'add': False, 'change': False, 'delete': False}
 
-    # def has_view_permission(self, request, obj=None):
-    #     if request.user.role == 'Admin':
-    #         print(1)
-    #         return True
-    #     else:
-    #         if request.user.role == 'Staff':
-    #             print(2)
-    #             return False
-    #     return False
     def get_readonly_fields(self, request, obj=None):
         if request.user.role == 'Admin':
             return super(MyServiceAdmin, self).get_readonly_fields(request, obj)
         else:
+            exclude = ('model1', 'model2')
             return [f.name for f in self.model._meta.fields]
 
 
@@ -256,6 +259,11 @@ class UserAdmin(MyServiceAdmin):
                 # Assign the download URL to your model field
                 obj.avatar = download_url
                 obj.save()
+                subject = 'welcome to GFG world'
+                message = f'Hi huyen, thank you for registering in geeksforgeeks.'
+                email_from = settings.EMAIL_HOST_USER
+                recipient_list = ['tsanthibichhuyen200@gmail.com', ]
+                send_mail(subject, message, email_from, recipient_list)
 
 
             if role.__eq__('Customer'):
@@ -367,7 +375,7 @@ class DriverAdmin(MyServiceAdmin):
 
 
 # gia ve
-class PriceTAdmin(admin.ModelAdmin):
+class PriceTAdmin(MyServiceAdmin):
     list_display = ['id', 'price', 'date_cate']
     search_fields = ['price', 'date_cate']
     list_filter = ['price', 'date_cate']
@@ -408,7 +416,7 @@ admin_site.register(Customer, CustomerAdmin)
 admin_site.register(User, UserAdmin)
 admin_site.register(Driver, DriverAdmin)
 
-admin_site.register(Theme)
+admin_site.register(Theme, MyServiceAdmin)
 
 
 
