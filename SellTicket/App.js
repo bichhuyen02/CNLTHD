@@ -10,13 +10,14 @@ import Pay from './components/Ticket/Pay';
 import Ticket from './components/Ticket/Ticket';
 import Account from './components/User/Account';
 import HistoryOrder from './components/User/HistoryOrder';
+import RegisterAccount from './components/User/RegisterAccount';
 import Reposes from './components/User/Reposes';
 import Signin from './components/User/Signin';
 import Welcome from './components/User/Welcome';
 import Apis, { endpoints } from './config/Apis';
 import MyContext from './config/MyContext';
 import MyUserReducer from './reducer/MyUserReducer';
-import Register from './components/User/Register';
+import Search from './components/User/Search';
 
 const HomeScreen = () => {
   const [categories, setCategories] = useState([]);
@@ -52,7 +53,7 @@ function TrangChu() {
         return <Ionicons name={iconName} size={size} color={color} />;
       },
 
-      tabBarActiveTintColor: 'green',
+      tabBarActiveTintColor: '#003399',
       tabBarInactiveTintColor: 'black',
       headerShown: false,
     })}>
@@ -87,14 +88,13 @@ export default App = () => {
   return (
     <MyContext.Provider value={[user, dispatch]}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Welcome" options={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName="TrangChu" options={{ headerShown: false }}>
           <Stack.Screen name="TrangChu" component={TrangChu} options={{ headerShown: false }} />
           <Stack.Screen name="Signin" component={Signin} options={{ headerShown: false }} />
-          <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
+          <Stack.Screen name="RegisterAccount" component={RegisterAccount} options={{ headerShown: false }} />
           <Stack.Screen name="Welcome" component={Welcome} options={{ headerShown: false }} />
           <Stack.Screen name="Ticket" component={Ticket} options={{
             headerShown: true,
-            headerBackVisible: false,
             headerTitle: '',
             header: ({ navigation }) => <ImageHeader navigation={navigation} />,
           }} />
@@ -102,6 +102,7 @@ export default App = () => {
           <Stack.Screen name="HistoryOrder" component={HistoryOrder} options={{ headerShown: true, headerTitle: 'Lịch sử đặt vé' }} />
           <Stack.Screen name="Reposes" component={Reposes} options={{ headerShown: true, headerTitle: 'Phản hồi ý kiến' }} />
           <Stack.Screen name="Pay" component={Pay} options={{ headerShown: true, headerTitle: 'Thanh toán' }} />
+          <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
     </MyContext.Provider>

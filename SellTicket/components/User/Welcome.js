@@ -11,7 +11,7 @@ const Welcome = ({navigation}) => {
             <Text style={styles.desc}>{'Hãy đến với chúng tôi\n cùng bạn đồng hành khắp nẻo đường'}</Text>
         </View>
         <View style={styles.buttonsContainer}>
-            <TouchableOpacity style={[styles.button, styles.login]} onPress={() => navigation.navigate("Signin")}>
+            <TouchableOpacity style={[styles.button, styles.login]} onPress={() => navigation.navigate("TrangChu")}>
                 <Text style={styles.buttonText}>Đăng Nhập</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.button, styles.register]} onPress={() => navigation.navigate("RegisterAccount")}>

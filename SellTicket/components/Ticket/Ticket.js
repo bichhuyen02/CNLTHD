@@ -2,23 +2,13 @@ import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import React from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import Apis, { endpoints } from '../../config/Apis';
+import { FontAwesome } from '@expo/vector-icons';
 
 
 
-
-export default Ticket = ({ route, navigation }) => {
+export default Ticket = ({ navigation }) => {
     const Tab = createMaterialTopTabNavigator();
-    const {tripId} = route.params;
-    const bookTicket = async () => {
-        const invoice = await Apis.post(endpoints['invoice'],{amout:0})
-        const res = await Apis.post(endpoints['bookTicket_onl'](tripId), {
-            "invoice": invoice,
-            "customer": 3, 
-            "quantity": 6})
-            
-            navigation.navigate("Pay")
-    }
+
     function DacTrung() {
         return (
             <ScrollView style={{ flex: 1, backgroundColor: '#F0F0F0' }}>
@@ -73,7 +63,7 @@ export default Ticket = ({ route, navigation }) => {
                         </View>
                     </View>
                 </View>
-            </ScrollView>
+           </ScrollView>
 
         )
     }
@@ -81,19 +71,21 @@ export default Ticket = ({ route, navigation }) => {
     function Ve() {
         return (
             <View>
-                <Text style={{ fontSize: 20, marginTop: 10, marginLeft: '5%' }}>Thông tin quan trọng</Text>
+                <Text style={{ fontSize: 14, marginTop: 10, marginLeft: '5%', color:'blue'}}>Thông tin quan trọng</Text>
                 <View style={styles.ItemVe}>
-                    <Text style={{ fontSize: 18, fontWeight: 600 }}>Điều khoản và điều kiện</Text>
-                    <Text>• Vé khởi hành trong giai đoạn Cuối năm và Tết Nguyên đán có thể không được hoàn, đổi lịch. Vui lòng xác nhận ngày khởi hành của bạn trước khi thực hiện thanh toán.</Text>
-                    <Text>•	Yêu cầu đeo khẩu trang khi lên xe</Text>
-                    <Text>•	Có mặt tại văn phòng/quầy vé/bến xe trước 15 phút để làm thủ tục lên xe</Text>
-                    <Text>•	Không mang đồ ăn, thức ăn có mùi lên xe</Text>
-                    <Text>•	Không hút thuốc, uống rượu, sử dụng chất kích thích trên xe</Text>
-                    <Text>•	Không mang các vật dễ cháy nổ lên xe</Text>
-                    <Text>•	Không vứt rác trên xe</Text>
-                    <Text>•	Tổng trọng lượng hành lý không vượt quá 15 kg</Text>
-                    <Text>•	Trẻ em từ 6 tuổi hoặc cao từ 100 cm trở lên mua vé như người lớn</Text>
-                    <Text>•	Công ty xe khách hoạt động từ 7:00 – 22:00 hàng ngày</Text>
+                    <Text style={{ fontSize: 18, fontWeight: 600, marginTop:'2%', left:'5%' }}>Điều khoản và điều kiện</Text>
+                    <View style={{ fontSize: 20, marginTop: 10, marginLeft: '5%'}}>
+                        <View style={styles.text1}>
+                            <Text>• Vé khởi hành trong giai đoạn Cuối năm và Tết Nguyên đán có thể không được hoàn, đổi lịch.</Text>
+                            <Text>•	Yêu cầu đeo khẩu trang khi lên xe </Text> 
+                            <Text>•	Có mặt tại văn phòng/quầy vé/bến xe trước 15 phút để làm thủ tục lên xe </Text> 
+                            <Text>• Không mang đồ ăn, thức ăn có mùi lên xe </Text>  
+                            <Text>•	Không hút thuốc, uống rượu, sử dụng chất kích thích trên xe </Text> 
+                            <Text>•	Không mang các vật dễ cháy nổ lên xe </Text> 
+                            <Text>•	Không vứt rác trên xe </Text> 
+                        </View>
+                    </View>
+                   
 
                 </View>
             </View>
@@ -102,26 +94,57 @@ export default Ticket = ({ route, navigation }) => {
 
     function TuyenDuong() {
         return (
-            <Text> dac trug</Text>
+            <View>
+                <Text style={{ fontSize: 20, marginTop: 10, marginLeft: '5%' }}>Lịch trình</Text>
+                <View style={styles.Item}>
+                    <View style={{ marginTop: 10, marginLeft: 5, marginBottom: 10 }}>
+                        <View style={{ flexDirection: 'row', width: '100%' }}>
+                            <Text style={{ width: '13%', textAlign: 'center' }}>04:30</Text>
+                            <FontAwesome name="circle-o" size={24} color="#00CCFF" style={{ width: '10%' }} />
+                            <Text style={{ width: '70%' }}>Văn phòng quận 1A</Text>
+                        </View>
+
+                        <View style={{ flexDirection: 'row' }}>
+                            <Ionicons name="ellipsis-vertical-outline" size={24} color="black" style={{ marginLeft: '12.5%' }} />
+                        </View>
+
+                        <View style={{ flexDirection: 'row', width: '100%' }}>
+                            <Text style={{ width: '13%', textAlign: 'center' }}>06:30</Text>
+                            <FontAwesome name="circle" size={24} color="#00CCFF" style={{ width: '10%' }} />
+                            <Text style={{ width: '70%' }}>Bến xe Bà Rịa 1</Text>
+                        </View>
+                    </View>
+
+                    <View style={styles.icon}>
+                        <AntDesign name="customerservice" size={18} color="black" />
+                        <Ionicons name="wifi" size={18} color="black" />
+                        <MaterialCommunityIcons name="usb-port" size={18} color="black" />
+                        <MaterialCommunityIcons name="battery-charging" size={18} color="black" />
+                        <MaterialCommunityIcons name="presentation-play" size={18} color="black" />
+                    </View>
+                </View>
+                <Text style={{ fontSize: 20, marginTop: 10, marginLeft: '5%' }}>Tuyến đường</Text>
+                <View style={styles.ItemTD}>
+                    <Text>Quận 5 - Đồng Nai</Text>
+                </View>
+            </View>
         )
     }
 
     return (
         <View style={{ flex: 1 }}>
-            <ScrollView style={{ flex: 0.98 }}>
                 <Tab.Navigator>
                     <Tab.Screen name="DacTrung" component={DacTrung} options={{ title: 'Đặc trưng' }} />
                     <Tab.Screen name="Ve" component={Ve} options={{ title: 'Vé' }} />
                     <Tab.Screen name="TuyenDuong" component={TuyenDuong} options={{ title: 'Tuyến đường' }} />
                 </Tab.Navigator>
-            </ScrollView>
 
             <View style={{ flex: 0.1, padding: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'white', borderTopWidth: 1, borderColor: '#C0C0C0' }}>
-                <Text style={{ fontSize: 20, fontWeight: '700', color: '#FF8C00' }}>150.000 VNĐ
+                <Text style={{ fontSize: 20, fontWeight: '700', color: '#3366CC' }}>150.000 VNĐ
                     <Text style={{ fontSize: 16, fontWeight: '400', color: '#808080' }}>/chỗ</Text>
                 </Text>
                 <TouchableOpacity style={{ backgroundColor: '#1E90FF', paddingTop: 10, paddingBottom: 10, paddingLeft: 30, paddingRight: 30, borderRadius: 5 }}
-                    onPress={bookTicket}>
+                    onPress={() => navigation.navigate("Pay")}>
                     <Text style={{ color: 'white', fontSize: 18 }}>Chọn</Text>
                 </TouchableOpacity>
             </View>
@@ -177,8 +200,44 @@ const styles = StyleSheet.create({
         top: 18,
         backgroundColor: 'white',
         width: '100%',
-        height: '100%',
+        height: '70%',
 
+    },
+
+    Item: {
+        backgroundColor: 'white',
+        borderRadius: 5,
+        margin: 10,
+        width: '90%',
+        height: 150,
+        padding: 10,
+        margin: 10
+    },
+
+    icon: {
+        flexDirection: 'row',
+        borderWidth: 1,
+        borderColor: '#C0C0C0',
+        borderRadius: 10,
+        padding: 5,
+        width: 120,
+        justifyContent: 'space-evenly',
+        marginTop: 3,
+        marginLeft: 10
+    },
+    
+    ItemTD:{
+        backgroundColor: 'white',
+        borderRadius: 5,
+        width: '90%',
+        height: 60,
+        padding: 10,
+    },
+
+    text1:{
+        fontSize:18,
+        lineHeight: 1.5,
+        marginBottom: 19,
     }
 
 })

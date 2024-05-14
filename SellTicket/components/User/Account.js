@@ -131,7 +131,7 @@ export default ProfileView = ({ navigation }) => {
           )}
 
           <LinearGradient
-            colors={['#00FF7F', '#008B00']}
+            colors={['#66CCFF', '#000080']}
             start={[0, 0]}
             end={[0, 1]}
             style={{
@@ -157,7 +157,7 @@ export default ProfileView = ({ navigation }) => {
           </TouchableOpacity>
 
           <LinearGradient
-            colors={['#00FF7F', '#008B00']}
+            colors={['#66CCFF', '#000080']}
             start={[0, 0]}
             end={[0, 1]}
             style={{
@@ -183,7 +183,7 @@ export default ProfileView = ({ navigation }) => {
           </TouchableOpacity>
 
           <LinearGradient
-            colors={['#00FF7F', '#008B00']}
+            colors={['#66CCFF', '#000080']}
             start={[0, 0]}
             end={[0, 1]}
             style={{
@@ -207,7 +207,7 @@ export default ProfileView = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: '#EE82EE',
+    backgroundColor: '#1E90FF',
     height: 120
   },
 
