@@ -1,2 +1,2 @@
-export const client_id = "s8O1CYileYT6G7uCEqgiMHIW3Vv7wtgXNuZbxwbq"
-export const client_secret = "vY8nu1OwbPABpxnoXrZ3e5LswJu3s1mwTeFgb9bwynHjmEpl4o4K1kinMb5S1OBBhiXA4KA0eAAMl3zsTwgCKfBy7SDgE29JbuQWZsWg4DT8NJ4IrAGrWqY9C6jkuXmF"
+export const client_id = "kQ2emi2Lf5nX4ttvWRT1Ggtr5GCAamadeeuqcjUP"
+export const client_secret = "23rUSyEBr21kPubTihxIjKhEM2bMlVLbEVrGnjvgvwWx9sgCCsl0yxnhjcBjaS8vw5y1s7U6pQYrgU4WL9UvyhTd8sLNd3zPz2A1eIu5oprP1igy6YlSBLiECYdPfSdS"

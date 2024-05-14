@@ -5,7 +5,7 @@ import { AntDesign } from '@expo/vector-icons'; // Import icon từ thư viện 
 import MyContext from '../../config/MyContext';
 import {client_id, client_secret} from '../../key/Key_app'
 import Apis, { authApi, endpoints } from '../../config/Apis';
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const Signin = ({ navigation }) => {

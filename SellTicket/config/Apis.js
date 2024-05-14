@@ -6,9 +6,13 @@ const HOST = "https://bichhuyen02.pythonanywhere.com"
 export const endpoints = {
     'categories': "/categories/",
     'bStation': "/bStation/",
+    'province': "/province/",
+    'provinceDetail': (province_id) =>`/province/${province_id}`,
+    'provinceBsta': (province_id) =>`/province/${province_id}/bstation`,
     'buses': "/buses/",
     'trip': "/trips/",
     'tripDetail': (trip_id) => `/trip/${trip_id}/`,
+
     'invoice': '/invoice/',
     'bookTicket_onl': (trip_id) => `/trip/${trip_id}/ticket-onl`,
 

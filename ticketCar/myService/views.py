@@ -51,7 +51,7 @@ class PriceTViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = PriceT.objects.all()
     serializer_class = PriceTSerializer
 
-class InvoiceViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView, generics.CreateAPIView, generics.UpdateAPIView):
+class InvoiceViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView, generics.CreateAPIView):
     queryset = Invoice.objects.all()
     serializer_class = InvoiceSerializer
 
@@ -77,7 +77,7 @@ class TicketViewSet(viewsets.ViewSet, generics.DestroyAPIView, generics.ListAPIV
 
 
 # chuyen xe
-class ProvinceViewSet(viewsets.ViewSet, generics.ListAPIView):
+class ProvinceViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView):
     queryset = Province.objects.all()
     serializer_class = ProvinceSerializer
 
@@ -111,6 +111,14 @@ class BuesViewSet(viewsets.ViewSet, generics.ListAPIView):
     def get_queryset(self):
         queries = self.queryset
         if self.action.__eq__('list'):
+            destination = self.request.query_params.get('destination')#đến
+            if id:
+                queries = queries.filter(destination=destination)
+
+            departure = self.request.query_params.get('departure')  # đi
+            if id:
+                queries = queries.filter(departure=departure)
+
             name = self.request.query_params.get('name')
             if name:
                 queries = queries.filter(name=name)
@@ -124,7 +132,6 @@ class BuesViewSet(viewsets.ViewSet, generics.ListAPIView):
 class TripViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView):
     queryset = Trip.objects.all()
     serializer_class = TripSerializer
-    permission_classes = [permissions.AllowAny()]
 
     def get_queryset(self):
         queries = self.queryset
@@ -136,8 +143,6 @@ class TripViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIVi
             dateGo = self.request.query_params.get('dateGo')
             if dateGo:
                 queries = queries.filter(dateGo__icontains=dateGo)
-
-
         return queries
 
 class TripCarViewSet(viewsets.ViewSet, generics.ListAPIView):
@@ -157,10 +162,10 @@ class TripCarViewSet(viewsets.ViewSet, generics.ListAPIView):
 
             return queries
 
-        # def get_permissions(self):
-        #     if self.action in ['add_ticket', 'add_ticket_onl']:
-        #         return [permissions.IsAuthenticated()]
-        #     return self.permission_classes
+        def get_permissions(self):
+            if self.action in ['add_ticket', 'add_ticket_onl']:
+                return [permissions.IsAuthenticated()]
+            return self.permission_classes
 
         @action(methods=['post'], url_path="ticket-onl", detail=True)
         def add_ticket_onl(self, request, pk):

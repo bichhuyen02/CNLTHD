@@ -2,7 +2,7 @@ import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/
 import React from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export default Busses = ({ navigation }) => {
+export default Busses = ({ route, navigation }) => {
     return (
         <ScrollView style={{ flex: 1, backgroundColor: '#F0F0F0' }}>
             <TouchableOpacity style={styles.Item} onPress={() => navigation.navigate("Ticket")} >

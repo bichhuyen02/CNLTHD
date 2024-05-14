@@ -6,20 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="39d5dde6-f08c-46c3-bc9f-7df5246bb32a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SellTicket/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SellTicket/components/Home/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/components/Home/Home.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SellTicket/components/Ticket/Busses.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/components/Ticket/Busses.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SellTicket/components/Ticket/Ticket.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/components/Ticket/Ticket.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SellTicket/components/User/Register.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/components/User/Register.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SellTicket/components/User/RegisterAccount.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SellTicket/components/User/Welcome.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/components/User/Welcome.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SellTicket/components/User/Signin.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/components/User/Signin.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SellTicket/config/Apis.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/config/Apis.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SellTicket/key/Key_app.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/key/Key_app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SellTicket/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SellTicket/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SellTicket/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/yarn.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ticketCar/myService/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/myService/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ticketCar/myService/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ticketCar/myService/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/myService/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ticketCar/myService/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/myService/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

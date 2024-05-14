@@ -11,8 +11,13 @@ export default Ticket = ({ route, navigation }) => {
     const Tab = createMaterialTopTabNavigator();
     const {tripId} = route.params;
     const bookTicket = async () => {
-        const invoice = await Apis.get(endpoints['invoice'],{amout:0})
-        const res = await Apis.post(endpoints['bookTicket_onl'](tripId), {})
+        const invoice = await Apis.post(endpoints['invoice'],{amout:0})
+        const res = await Apis.post(endpoints['bookTicket_onl'](tripId), {
+            "invoice": invoice,
+            "customer": 3, 
+            "quantity": 6})
+            
+            navigation.navigate("Pay")
     }
     function DacTrung() {
         return (
@@ -116,7 +121,7 @@ export default Ticket = ({ route, navigation }) => {
                     <Text style={{ fontSize: 16, fontWeight: '400', color: '#808080' }}>/chỗ</Text>
                 </Text>
                 <TouchableOpacity style={{ backgroundColor: '#1E90FF', paddingTop: 10, paddingBottom: 10, paddingLeft: 30, paddingRight: 30, borderRadius: 5 }}
-                    onPress={() => navigation.navigate("Pay")}>
+                    onPress={bookTicket}>
                     <Text style={{ color: 'white', fontSize: 18 }}>Chọn</Text>
                 </TouchableOpacity>
             </View>
