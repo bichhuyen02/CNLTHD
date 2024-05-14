@@ -22,11 +22,11 @@ class MyServiceAdmin(admin.ModelAdmin):
     def get_model_perms(self, request):
         # Lấy thông tin người dùng đăng nhập
         user = request.user
-
+        print(user.role)
         # Kiểm tra quyền truy cập của người dùng
         if user.role.__eq__('Admin'):
             # Người dùng là superuser, không áp dụng exclude
-            return {}
+            return {'add': True, 'change': True, 'delete': True}
         else:
             # Người dùng không phải là superuser, áp dụng exclude
             return {'add': False, 'change': False, 'delete': False}
@@ -185,7 +185,7 @@ class BuesAdmin(MyServiceAdmin):
         else:
             raise ValidationError("Lỗi: 2 điểm đi và đến không được trùng nhau.")
 class TripAdmin(MyServiceAdmin):
-    list_display = ['car', 'bues', 'timeGo', 'dateGo', 'quantity', 'driver']
+    list_display = ['car', 'bues', 'timeGo', 'dateGo', 'driver']
     search_fields = ['car', 'timeGo', 'dateGo', 'driver']
     list_filter = ['car', 'timeGo', 'dateGo', 'driver']
 

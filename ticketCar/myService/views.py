@@ -41,13 +41,6 @@ class CarViewSet(viewsets.ViewSet, generics.ListAPIView):
             queries = queries.filter(licensePlates__icontains=q)
         return queries
 
-    @action(methods=['get'], detail=True)
-    def chair(self, request, pk):
-        chair = self.get_object().chair_set.all()
-        return Response(ChairSerializer(chair, many=True, context={
-            'request': request
-        }).data, status=status.HTTP_200_OK)
-
 
 
 
@@ -58,15 +51,9 @@ class PriceTViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = PriceT.objects.all()
     serializer_class = PriceTSerializer
 
-class InvoiceViewSet(viewsets.ViewSet,  generics.ListAPIView, generics.RetrieveAPIView):
+class InvoiceViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView, generics.CreateAPIView, generics.UpdateAPIView):
     queryset = Invoice.objects.all()
     serializer_class = InvoiceSerializer
-    @action(methods=['get'], detail=True)
-    def ticket(self, request, pk):
-        ticket = self.get_object().chair_set.all()
-        return Response(ChairSerializer(ticket, many=True, context={
-            'request': request
-        }).data, status=status.HTTP_200_OK)
 
 class TicketViewSet(viewsets.ViewSet, generics.DestroyAPIView, generics.ListAPIView,  generics.RetrieveAPIView):
     queryset = Ticket.objects.all()
@@ -133,22 +120,7 @@ class BuesViewSet(viewsets.ViewSet, generics.ListAPIView):
                 queries = queries.filter(province=province)
 
         return queries
-class TripCarViewSet(viewsets.ViewSet, generics.ListAPIView):
-    queryset = TripCar.objects.all()
-    serializer_class = TripCarSerializer
 
-    def get_queryset(self):
-        queries = self.queryset
-        if self.action.__eq__('list'):
-            name = self.request.query_params.get('name')
-            if name:
-                queries = queries.filter(name=name)
-
-            province = self.request.query_params.get('province')
-            if province:
-                queries = queries.filter(province=province)
-
-        return queries
 class TripViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView):
     queryset = Trip.objects.all()
     serializer_class = TripSerializer
@@ -168,62 +140,102 @@ class TripViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIVi
 
         return queries
 
-    def get_permissions(self):
-        if self.action in ['add_ticket', 'add_ticket_onl']:
-            return [permissions.IsAuthenticated()]
-        return self.permission_classes
+class TripCarViewSet(viewsets.ViewSet, generics.ListAPIView):
+        queryset = TripCar.objects.all()
+        serializer_class = TripCarSerializer
 
-    @action(methods=['post'], url_path="ticket-onl", detail=True)
-    def add_ticket_onl(self, request, pk):
-        invoice = Invoice.objects.get(id=request.data.get('invoice'))
-        customer = Customer.objects.get(id=request.user.id)
-        ticket = Ticket.objects.create( invoice= invoice, customer=customer,
-                                       trip=self.get_object())
-        ticket.save()
+        def get_queryset(self):
+            queries = self.queryset
+            if self.action.__eq__('list'):
+                name = self.request.query_params.get('name')
+                if name:
+                    queries = queries.filter(name=name)
 
-        return Response(TicketSerializer(ticket, context={
-            'request': request
-        }).data, status=status.HTTP_201_CREATED)
+                province = self.request.query_params.get('province')
+                if province:
+                    queries = queries.filter(province=province)
 
-    @action(methods=['post'], url_path='ticket', detail=True)
-    def ticket(self, request, pk):
-        invoice = Invoice.objects.get(id=1)
-        phones = request.data.get('phone')
-        user = Customer.get_or_create(phone=phones.strip())
-        ticket = Ticket.objects.create(invoice=invoice, staff=request.user,
-                                       trip=self.get_object())
-        ticket.save()
+            return queries
 
-        return Response(TicketSerializer(ticket, context={
-            'request': request
-        }).data, status=status.HTTP_201_CREATED)
+        # def get_permissions(self):
+        #     if self.action in ['add_ticket', 'add_ticket_onl']:
+        #         return [permissions.IsAuthenticated()]
+        #     return self.permission_classes
 
-    @action(methods=['post'], url_path='add_complain', detail=True)
-    def add_complain(self, request, pk):
-        complain = Complain.objects.create(custumer=request.user, trip=self.get_object(), conten= request.data.get('content'))
-        complain.save()
+        @action(methods=['post'], url_path="ticket-onl", detail=True)
+        def add_ticket_onl(self, request, pk):
+            invoice = Invoice.objects.get(id=request.data.get('invoice'))
+            customer = Customer.objects.get(id=request.user.id)
+            ticket = Ticket.objects.create(invoice=invoice, customer=customer, quantity=request.data.get('quantity'),
+                                           trip=self.get_object())
 
-        return Response(TicketSerializer(complain, context={
-            'request': request
-        }).data, status=status.HTTP_201_CREATED)
+            price = float(self.get_object().price.price)
+            quantity = float(request.data.get('quantity'))
+            invoice.amout = price * quantity
 
-    @action(methods=['patch'], url_path='up_complain', detail=True)
-    def up_complain(self, request, pk):
-        complain = Complain.objects.update(conten=request.data.get('content'))
-        complain.save()
+            self.get_object().trip.quantity = self.get_object().trip.quantity - quantity
 
-        return Response(TicketSerializer(complain, context={
-            'request': request
-        }).data, status=status.HTTP_202_ACCEPTED)
 
-    @action(methods=['delete'], url_path='de_complain', detail=True)
-    def de_complain(self, request, pk):
-        complain = Complain.objects.delete(pk)
-        complain.save()
+            ticket.save()
+            invoice.save()
+            self.get_object().save()
 
-        return Response(TicketSerializer(complain, context={
-            'request': request
-        }).data, status=status.HTTP_201_CREATED)
+            return Response(TicketSerializer(ticket, context={
+                'request': request
+            }).data, status=status.HTTP_201_CREATED)
+
+        @action(methods=['post'], url_path='ticket', detail=True)
+        def ticket(self, request, pk):
+            invoice = Invoice.objects.get(id=1)
+            phones = request.data.get('phone')
+            user = Customer.get_or_create(phone=phones.strip())
+            ticket = Ticket.objects.create(invoice=invoice, staff=request.user, customer=user, quantity=request.data.get('quantity'),
+                                           trip=self.get_object())
+
+            price = float(self.get_object().price.price)
+            quantity = float(request.data.get('quantity'))
+            invoice.amout = price * quantity
+
+            self.get_object().trip.quantity = self.get_object().trip.quantity - quantity
+
+            ticket.save()
+            invoice.save()
+            self.get_object().save()
+
+            return Response(TicketSerializer(ticket, context={
+                'request': request
+            }).data, status=status.HTTP_201_CREATED)
+
+        @action(methods=['post'], url_path='add_complain', detail=True)
+        def add_complain(self, request, pk):
+            customer = Customer.objects.get(id=request.user.id)
+            complain = Complain.objects.create(custumer=customer, trip=self.get_object(),
+                                               conten=request.data.get('content'))
+            complain.save()
+
+            return Response(TicketSerializer(complain, context={
+                'request': request
+            }).data, status=status.HTTP_201_CREATED)
+
+        @action(methods=['patch'], url_path='up_complain', detail=True)
+        def up_complain(self, request, pk):
+            complain = Complain.objects.update(conten=request.data.get('content'))
+            complain.save()
+
+            return Response(TicketSerializer(complain, context={
+                'request': request
+            }).data, status=status.HTTP_202_ACCEPTED)
+
+        @action(methods=['delete'], url_path='de_complain', detail=True)
+        def de_complain(self, request, pk):
+            complain = Complain.objects.delete(pk)
+            complain.save()
+
+            return Response(TicketSerializer(complain, context={
+                'request': request
+            }).data, status=status.HTTP_201_CREATED)
+
+
 
 
 
@@ -296,7 +308,6 @@ class UserViewSet(viewsets.ViewSet, generics.UpdateAPIView, generics.DestroyAPIV
             Customer.objects.create(user=user)
             return Response(UserSerializer(user, context={'request': request}).data, status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
-
 
 class DriverViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = Driver.objects.all()

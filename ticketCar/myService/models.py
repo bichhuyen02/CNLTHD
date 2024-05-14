@@ -115,11 +115,11 @@ class Bues(BaseModel):
     def __str__(self):
         return "đi: {}, đến: {}".format(self.departure, self.destination)
 class Trip(BaseModel):
+    quantity = models.IntegerField()
     timeGo = models.TimeField(blank=True)
     dateGo = models.DateField(blank=True)
     driver = models.ForeignKey(Driver, on_delete=models.RESTRICT)
     car = models.ForeignKey(Car, on_delete=models.RESTRICT)
-    quantity = models.IntegerField()
     bues = models.ForeignKey(Bues, on_delete=models.CASCADE)
     def __str__(self):
         return "xe: {}, chuyến: {}".format(self.car.category.name, self.bues)
@@ -141,7 +141,7 @@ class Ticket(BaseModel):
     quantity = models.IntegerField(blank=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     staff = models.ForeignKey(Staff, on_delete=models.CASCADE,default=1)
-    trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
+    trip = models.ForeignKey(TripCar, on_delete=models.CASCADE)
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -153,7 +153,7 @@ class Ticket(BaseModel):
 #complain
 class Complain(BaseModel):
     content = models.CharField(max_length=255, blank=True)
-    trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
+    trip = models.ForeignKey(TripCar, on_delete=models.CASCADE)
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
     def __str__(self):
         return self.content

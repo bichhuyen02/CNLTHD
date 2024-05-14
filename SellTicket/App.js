@@ -10,13 +10,13 @@ import Pay from './components/Ticket/Pay';
 import Ticket from './components/Ticket/Ticket';
 import Account from './components/User/Account';
 import HistoryOrder from './components/User/HistoryOrder';
-import RegisterAccount from './components/User/RegisterAccount';
 import Reposes from './components/User/Reposes';
 import Signin from './components/User/Signin';
 import Welcome from './components/User/Welcome';
 import Apis, { endpoints } from './config/Apis';
 import MyContext from './config/MyContext';
 import MyUserReducer from './reducer/MyUserReducer';
+import Register from './components/User/Register';
 
 const HomeScreen = () => {
   const [categories, setCategories] = useState([]);
@@ -90,7 +90,7 @@ export default App = () => {
         <Stack.Navigator initialRouteName="Welcome" options={{ headerShown: false }}>
           <Stack.Screen name="TrangChu" component={TrangChu} options={{ headerShown: false }} />
           <Stack.Screen name="Signin" component={Signin} options={{ headerShown: false }} />
-          <Stack.Screen name="RegisterAccount" component={RegisterAccount} options={{ headerShown: false }} />
+          <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
           <Stack.Screen name="Welcome" component={Welcome} options={{ headerShown: false }} />
           <Stack.Screen name="Ticket" component={Ticket} options={{
             headerShown: true,

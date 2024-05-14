@@ -2,13 +2,18 @@ import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import React from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Apis, { endpoints } from '../../config/Apis';
 
 
 
 
-export default Ticket = ({ navigation }) => {
+export default Ticket = ({ route, navigation }) => {
     const Tab = createMaterialTopTabNavigator();
-
+    const {tripId} = route.params;
+    const bookTicket = async () => {
+        const invoice = await Apis.get(endpoints['invoice'],{amout:0})
+        const res = await Apis.post(endpoints['bookTicket_onl'](tripId), {})
+    }
     function DacTrung() {
         return (
             <ScrollView style={{ flex: 1, backgroundColor: '#F0F0F0' }}>
