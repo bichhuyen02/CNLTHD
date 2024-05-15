@@ -1,7 +1,9 @@
 import { Entypo, FontAwesome6, Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useState } from 'react';
+import React, { useContext, useReducer, useState } from 'react';
 import { Image, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import MyUserReducer from '../../reducer/MyUserReducer';
+import MyContext from '../../config/MyContext';
 
 export default ProfileView = ({ navigation }) => {
   const [hidden, setHidden] = useState(false)
@@ -59,15 +61,15 @@ export default ProfileView = ({ navigation }) => {
               <TextInput
                 value={inputText}
                 onChangeText={handleInputChange}
-                style={{ borderWidth: 1, borderColor: 'gray', padding: 10, marginBottom: 5, fontSize:15 }}
+                style={{ borderWidth: 1, borderColor: 'gray', padding: 10, marginBottom: 5, fontSize: 15 }}
               />
 
-              <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%'}}>
-                <TouchableOpacity onPress={hideDialog}  style={{ width: '50%', marginRight: 10, padding: 5, backgroundColor: 'red'  }}>
-                  <Text style={{color:'white', textAlign: 'center'}}>Hủy</Text>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
+                <TouchableOpacity onPress={hideDialog} style={{ width: '50%', marginRight: 10, padding: 5, backgroundColor: 'red' }}>
+                  <Text style={{ color: 'white', textAlign: 'center' }}>Hủy</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={handleDialogButtonPress}  style={{ width: '50%', padding:5, backgroundColor: '#1E90FF' }}>
-                  <Text style={{color:'white', textAlign: 'center'}}>Hoàn Tất</Text>
+                <TouchableOpacity onPress={handleDialogButtonPress} style={{ width: '50%', padding: 5, backgroundColor: '#1E90FF' }}>
+                  <Text style={{ color: 'white', textAlign: 'center' }}>Hoàn Tất</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -77,131 +79,148 @@ export default ProfileView = ({ navigation }) => {
     );
   }
 
+ 
+
+    const logout = () => {
+      const [user, dispatch] = useContext(MyContext);
+        dispatch({
+            'type': 'logout'
+        })
+        navigation.navigate("Welcome")
+    }
+
+  const [user, dispatch] = useReducer(MyUserReducer, null);
   return (
-    <View style={{ flex: 1 }}>
-      <View style={styles.header}>
-        <View style={styles.headerContent}>
-          <Image
+    <MyContext.Provider value={[user, dispatch]}>
+      <View style={{ flex: 1 }}>
+        <View style={styles.header}>
+          <View style={styles.headerContent}>
+            {user.avatar===null?<Image
+              style={styles.avatar}
+              source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/ticket-20c1a.appspot.com/o/ava%2Fvodien.jpg?alt=media' }}
+            />:<Image
             style={styles.avatar}
-            source={{ uri: 'https://bootdey.com/img/Content/avatar/avatar3.png' }}
+            source={{ uri: user.avatar }}
           />
-          <Text style={{ textAlign: 'center', fontSize: 24, fontWeight: '800' }}>Jane Doe</Text>
+            }
+            <Text style={{ textAlign: 'center', fontSize: 24, fontWeight: '800' }}>Jane Doe</Text>
+          </View>
+        </View>
+
+        <View style={{ marginTop: '30%' }}>
+          <Text style={{ fontSize: 20, fontWeight: '800', marginLeft: 20 }}>Thông tin tài khoản</Text>
+
+          {/* thông tin tai khoan nguoi dung */}
+          <View style={{ marginTop: 15 }} >
+            <TouchableOpacity style={styles.button} onPress={toggleHiddenText}>
+              <Ionicons name="person" size={24} color="black" style={{ marginLeft: 10 }} />
+              <Text style={{ fontSize: 17, marginLeft: 5 }}>Thông tin tài khoản </Text>
+            </TouchableOpacity>
+            {hidden && (
+              <View style={styles.accountUser}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                  <Text style={{ fontSize: 16 }}>Chủ tài khoản:</Text>
+                  <Text style={{ fontSize: 16, paddingLeft: 10 }}>{user.last_name}</Text>
+                  <TouchableOpacity onPress={showDialog}>
+                    <FontAwesome6 name="pen-to-square" size={24} color="black" />
+                  </TouchableOpacity>
+                  <ModalUpdateUser />
+
+                </View>
+
+                <View style={{ flexDirection: 'row', marginTop: 10, justifyContent: 'space-between' }}>
+                  <Text style={{ fontSize: 16 }}>Số điện thoại:</Text>
+                  <Text style={{ fontSize: 16, paddingLeft: 10 }}>{user.phone}</Text>
+                  <TouchableOpacity onPress={showDialog}>
+                    <FontAwesome6 name="pen-to-square" size={24} color="black" />
+                  </TouchableOpacity>
+                  <ModalUpdateUser />
+                </View>
+
+                <View style={{ flexDirection: 'row', marginTop: 10, justifyContent: 'space-between' }}>
+                  <Text style={{ fontSize: 16 }}>Email:</Text>
+                  <Text style={{ fontSize: 16, paddingLeft: 10 }}>{user.email}</Text>
+                  <TouchableOpacity onPress={showDialog}>
+                    <FontAwesome6 name="pen-to-square" size={24} color="black" />
+                  </TouchableOpacity>
+                  <ModalUpdateUser />
+                </View>
+              </View>
+            )}
+
+            <LinearGradient
+              colors={['#66CCFF', '#000080']}
+              start={[0, 0]}
+              end={[0, 1]}
+              style={{
+                height: 5,
+                width: '4%',
+                borderTopLeftRadius: 10,
+                borderBottomLeftRadius: 10,
+                height: 50,
+                position: 'absolute',
+                top: 0,
+                left: 18
+              }}
+            >
+              <View></View>
+            </LinearGradient>
+          </View>
+
+          {/* lich su dat ve */}
+          <View style={{ marginTop: 15 }} >
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("HistoryOrder")} activeOpacity={0.7}>
+              <Entypo name="back-in-time" size={24} color="black" style={{ marginLeft: 10 }} />
+              <Text style={{ fontSize: 17, marginLeft: 5 }}>Lịch sử đặt vé</Text>
+            </TouchableOpacity>
+
+            <LinearGradient
+              colors={['#66CCFF', '#000080']}
+              start={[0, 0]}
+              end={[0, 1]}
+              style={{
+                height: 5,
+                width: '4%',
+                borderTopLeftRadius: 10,
+                borderBottomLeftRadius: 10,
+                height: 50,
+                position: 'absolute',
+                top: 0,
+                left: 18
+              }}
+            >
+              <View></View>
+            </LinearGradient>
+          </View>
+
+          {/* Dang xuat */}
+          <View style={{ marginTop: 15 }} >
+            <TouchableOpacity style={styles.button} onPress={logout} activeOpacity={0.7}>
+              <Ionicons name="exit" size={24} color="black" style={{ marginLeft: 10 }} />
+              <Text style={{ fontSize: 17, marginLeft: 5 }}>Đăng xuất</Text>
+            </TouchableOpacity>
+
+            <LinearGradient
+              colors={['#66CCFF', '#000080']}
+              start={[0, 0]}
+              end={[0, 1]}
+              style={{
+                height: 5,
+                width: '4%',
+                borderTopLeftRadius: 10,
+                borderBottomLeftRadius: 10,
+                height: 50,
+                position: 'absolute',
+                top: 0,
+                left: 18
+              }}
+            >
+              <View></View>
+            </LinearGradient>
+          </View>
         </View>
       </View>
-
-      <View style={{ marginTop: '30%' }}>
-        <Text style={{ fontSize: 20, fontWeight: '800', marginLeft: 20 }}>Thông tin tài khoản</Text>
-
-        {/* thông tin tai khoan nguoi dung */}
-        <View style={{ marginTop: 15 }} >
-          <TouchableOpacity style={styles.button} onPress={toggleHiddenText}>
-            <Ionicons name="person" size={24} color="black" style={{ marginLeft: 10 }} />
-            <Text style={{ fontSize: 17, marginLeft: 5 }}>Thông tin tài khoản </Text>
-          </TouchableOpacity>
-          {hidden && (
-            <View style={styles.accountUser}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text style={{ fontSize: 16 }}>Chủ tài khoản:</Text>
-                <Text style={{ fontSize: 16, paddingLeft: 10 }}>Nguyễn Văn A</Text>
-                <TouchableOpacity onPress={showDialog}>
-                  <FontAwesome6 name="pen-to-square" size={24} color="black" />
-                </TouchableOpacity>
-                <ModalUpdateUser />
-
-              </View>
-
-              <View style={{ flexDirection: 'row', marginTop: 10, justifyContent: 'space-between' }}>
-                <Text style={{ fontSize: 16 }}>Số điện thoại:</Text>
-                <Text style={{ fontSize: 16, paddingLeft: 10 }}>0123456789</Text>
-                <TouchableOpacity onPress={showDialog}>
-                  <FontAwesome6 name="pen-to-square" size={24} color="black" />
-                </TouchableOpacity>
-                <ModalUpdateUser />
-              </View>
-
-              <View style={{ flexDirection: 'row', marginTop: 10, justifyContent: 'space-between' }}>
-                <Text style={{ fontSize: 16 }}>Email:</Text>
-                <Text style={{ fontSize: 16, paddingLeft: 10 }}>nguyenvana@gmail.com</Text>
-                <TouchableOpacity onPress={showDialog}>
-                  <FontAwesome6 name="pen-to-square" size={24} color="black" />
-                </TouchableOpacity>
-                <ModalUpdateUser />
-              </View>
-            </View>
-          )}
-
-          <LinearGradient
-            colors={['#66CCFF', '#000080']}
-            start={[0, 0]}
-            end={[0, 1]}
-            style={{
-              height: 5,
-              width: '4%',
-              borderTopLeftRadius: 10,
-              borderBottomLeftRadius: 10,
-              height: 50,
-              position: 'absolute',
-              top: 0,
-              left: 18
-            }}
-          >
-            <View></View>
-          </LinearGradient>
-        </View>
-
-        {/* lich su dat ve */}
-        <View style={{ marginTop: 15 }} >
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("HistoryOrder")} activeOpacity={0.7}>
-            <Entypo name="back-in-time" size={24} color="black" style={{ marginLeft: 10 }} />
-            <Text style={{ fontSize: 17, marginLeft: 5 }}>Lịch sử đặt vé</Text>
-          </TouchableOpacity>
-
-          <LinearGradient
-            colors={['#66CCFF', '#000080']}
-            start={[0, 0]}
-            end={[0, 1]}
-            style={{
-              height: 5,
-              width: '4%',
-              borderTopLeftRadius: 10,
-              borderBottomLeftRadius: 10,
-              height: 50,
-              position: 'absolute',
-              top: 0,
-              left: 18
-            }}
-          >
-            <View></View>
-          </LinearGradient>
-        </View>
-
-        {/* Dang xuat */}
-        <View style={{ marginTop: 15 }} >
-          <TouchableOpacity style={styles.button} activeOpacity={0.7}>
-            <Ionicons name="exit" size={24} color="black" style={{ marginLeft: 10 }} />
-            <Text style={{ fontSize: 17, marginLeft: 5 }}>Đăng xuất</Text>
-          </TouchableOpacity>
-
-          <LinearGradient
-            colors={['#66CCFF', '#000080']}
-            start={[0, 0]}
-            end={[0, 1]}
-            style={{
-              height: 5,
-              width: '4%',
-              borderTopLeftRadius: 10,
-              borderBottomLeftRadius: 10,
-              height: 50,
-              position: 'absolute',
-              top: 0,
-              left: 18
-            }}
-          >
-            <View></View>
-          </LinearGradient>
-        </View>
-      </View>
-    </View>
+    </MyContext.Provider>
   )
 }
 

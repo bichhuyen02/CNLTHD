@@ -1,11 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {StyleSheet,View, Text, TouchableOpacity, Image, ScrollView, StatusBar, TextInput } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import CarouselTrending from './CarouselTrending';
-export default Home = ({navigation}) => {
+import { endpoints } from '../../config/Apis';
+
+
+
+export default Home = ({route, navigation}) => {
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
 
@@ -20,6 +23,29 @@ export default Home = ({navigation}) => {
   };
 
   const [seats, setSeats] = useState(1);
+
+  const [pointGo, setPointGo] = useState(null);
+  const [pointUp, setPointUp] = useState(null);
+
+  const pointGoId = route.params?.pointGo
+  const pointUpId = route.params?.pointUp
+
+  useEffect(() => {
+    const loadPointGo = async () => {
+      if (pointGoId !== undefined && pointGoId !== "") {
+        const res = await Apis.get(endpoints['bStationDetail'](pointGoId));
+        setPointGo(res.data)
+      }
+    }
+    const loadPointUp = async () => {
+      if (pointUpId !== undefined && pointUpId !== "") {
+        const res = await Apis.get(endpoints['bStationDetail'](pointUpId));
+        setPointUp(res.data)
+      }
+    }
+    loadPointGo()
+    loadPointUp();
+  }, [pointUpId]);
 
   const handleSeatChange = (value) => {
     setSeats(value);
@@ -37,6 +63,11 @@ export default Home = ({navigation}) => {
     },
 ];
 
+const goToSearch = (index) => {
+  navigation.navigate("Search", {"index": index})
+}
+
+
   return(
         <View style={{flex:1}}>
          <StatusBar barStyle="light-content" />
@@ -51,22 +82,21 @@ export default Home = ({navigation}) => {
         </View>
         {/* #F0F0F0 */}
         <View style={{flex: 8, backgroundColor: '#F0F0F0'}}>
-          {/* <ScrollView style={{ marginTop: 350, zIndex: 999}}>
-            <CarouselTrending data={data} />
-          </ScrollView> */}
         </View>
         
 
         <View style={styles.ItemSreach}>
           <View  style={{width:'95%', height:'95%'}}>
+
             <View style={{margin:10}}>
               <Text style={{fontSize: 18}}>Từ</Text>
               <View style={{flexDirection: 'row'}}>
                 <MaterialCommunityIcons name="car-arrow-left" size={24} color="#0000FF" style={{marginRight: 5}} />
                 <TouchableOpacity
                   style={styles.InputText}
-                  onPress={() => navigation.navigate("Search")}>
-                  <Text style={{ color: '#808080' }}>Thành phố, khu vực, điểm lên xe</Text>
+                  onPress={()=>goToSearch(1)}>
+                  {pointGo===null?<Text style={{ color: '#808080' }} >Thành phố, khu vực, điểm lên xe</Text>:
+                  <Text style={{ color: '#808080' }} >{pointGo.name}</Text>}
                 </TouchableOpacity>
               </View>
             </View>
@@ -77,8 +107,9 @@ export default Home = ({navigation}) => {
                 <MaterialCommunityIcons name="car-arrow-right" size={24} color="#0000FF" style={{marginRight: 5}} />
                 <TouchableOpacity
                   style={styles.InputText}
-                  onPress={() => navigation.navigate("Search")}>
-                  <Text style={{ color: '#808080' }}>Thành phố, khu vực, điểm lên xe</Text>
+                  onPress={()=>goToSearch(2)}>
+                   {pointUp===null?<Text style={{ color: '#808080' }} >Thành phố, khu vực, điểm lên xe</Text>:
+                  <Text style={{ color: '#808080' }} >{pointUp.name}</Text>}
                 </TouchableOpacity>
               </View>
             </View>
@@ -124,7 +155,7 @@ export default Home = ({navigation}) => {
             </View>
 
 
-            <TouchableOpacity  style={styles.buttonSreach} onPress={() => navigation.navigate("Busses")}>
+            <TouchableOpacity  style={styles.buttonSreach} onPress={() => navigation.navigate("Busses", {'pointGo': pointGoId, 'pointUp': pointUpId, 'date': date, 'seat': seats})}>
               <Text style={{fontSize: 20, color: 'white', textAlign: 'center', fontWeight: '600'}}>Tìm kiếm</Text>
             </TouchableOpacity>
           </View>

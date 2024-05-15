@@ -2,38 +2,22 @@ import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { useEffect, useReducer, useState } from 'react';
+import React, {useReducer} from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Search from './components/Trip/Search';
 import Home from './components/Home/Home';
-import Busses from './components/Ticket/Busses';
-import Pay from './components/Ticket/Pay';
-import Ticket from './components/Ticket/Ticket';
-import Account from './components/User/Account';
-import HistoryOrder from './components/User/HistoryOrder';
-import RegisterAccount from './components/User/RegisterAccount';
-import Reposes from './components/User/Reposes';
 import Signin from './components/User/Signin';
-import Welcome from './components/User/Welcome';
-import Apis, { endpoints } from './config/Apis';
-import MyContext from './config/MyContext';
-import MyUserReducer from './reducer/MyUserReducer';
-import Search from './components/User/Search';
+import Register from './components/User/Register';
+import Welcome from './components/Home/Welcome';
+import Ticket from './components/Ticket/Ticket';
+import Busses from './components/Trip/Busses';
+import HistoryOrder from './components/History/HistoryOrder';
+import Reposes from './components/Complain/Reposes';
+import Pay from './components/Ticket/Pay';
+import Account from './components/User/Account';
+import MyUserReducer from './reducer/MyUserReducer'
 
-const HomeScreen = () => {
-  const [categories, setCategories] = useState([]);
 
-  useEffect(() => {
-    const loadCategory = async () => {
-      const res = await Apis.get(endpoints['categories']);
-      setCategories(res.data)
-    }
-    loadCategory();
-  }, [])
-
-  return <View style={styles.container}>
-    {categories.map(c => <Text key={c.id}>{c.name}</Text>)}
-  </View>
-};
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -91,7 +75,7 @@ export default App = () => {
         <Stack.Navigator initialRouteName="TrangChu" options={{ headerShown: false }}>
           <Stack.Screen name="TrangChu" component={TrangChu} options={{ headerShown: false }} />
           <Stack.Screen name="Signin" component={Signin} options={{ headerShown: false }} />
-          <Stack.Screen name="RegisterAccount" component={RegisterAccount} options={{ headerShown: false }} />
+          <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
           <Stack.Screen name="Welcome" component={Welcome} options={{ headerShown: false }} />
           <Stack.Screen name="Ticket" component={Ticket} options={{
             headerShown: true,

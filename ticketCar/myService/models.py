@@ -98,6 +98,7 @@ class Province(BaseModel):
     description = RichTextField(null=True)
     def __str__(self):
         return self.name
+
 class BStation(BaseModel):
     name = models.CharField(max_length=50, null=True)
     province = models.ForeignKey(Province, on_delete=models.CASCADE)

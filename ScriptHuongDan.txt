@@ -1,0 +1,46 @@
+	FILE HƯỚNG DẪN CHẠY FRONTEND VÀ BACKEND
+FRONTEND
+  1. Clone Repository
+      git clone https://github.com/bichhuyen02/CNLTHD 
+  2. Cài đặt node_modules
+      npm install
+  3. Thực thi: 
+      Đối với máy thật
+         Thực thi bằng các thao tác
+            -Cài ứng dụng Expo Go trên điện thoại
+            -Chọn s
+            -Quét mã QR để mở ứng dụng 
+      Đối với máy ảo Android
+            -Cài Android Studio 
+            -Tạo AVD
+            -Chạy máy giả lập Android
+          Thực thi bằng các lệnh
+            -npm start hoặc npx expo --tunnel (Recommend)
+            -Chọn s
+            -Chọn a
+BACKEND
+  1. Clone Repository
+      git clone https://github.com/bichhuyen02/CNLTHD 
+  2. Di chuyển vào thư mục Dự án
+      cd ticketCar
+  3. Tạo Môi Trường Ảo 
+      python -m venv venv
+ 4.  Truy cập môi trường ảo 
+      Windows: .\venv\Scripts\activate
+      Bash: source venv/Scripts/activate
+  5. Cài đặt thư viện 
+      pip install -r requirements.txt
+  6. Tạo CSDL MYSQL (Tạo bằng code hoặc chuột)
+     CREATE DATABASE ticketdb CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci; 
+  7. Tạo các bảng cho CSDL
+      python manage.py migrate
+      python manage.py makemigrations myService(sử dụng khi có thay đổi model)
+  8. Tạo tài khoản để đăng nhập vào web
+      python manage.py createsuperuser
+         •Nhập username
+         •Nhập mail
+         •Nhập password
+  9.  Chạy ứng dụng
+       python manage.py runserver
+
+

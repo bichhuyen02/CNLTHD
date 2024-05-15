@@ -3,8 +3,6 @@ from django.shortcuts import render
 from django.views import View
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
-from . import perms
 from .models import Car, Customer, Category, Complain, Staff, BStation, PriceT, Trip, Driver, User, Invoice, \
     Ticket, Province, Bues, TripCar
 from rest_framework import viewsets, generics, status, permissions, parsers
@@ -88,7 +86,7 @@ class ProvinceViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveA
             'request': request
         }).data, status=status.HTTP_200_OK)
 
-class BStationViewSet(viewsets.ViewSet, generics.ListAPIView):
+class BStationViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView):
     queryset = BStation.objects.all()
     serializer_class = BStationSerializer
 
@@ -384,3 +382,8 @@ class ComplainViewSet(viewsets.ViewSet, generics.UpdateAPIView, generics.Destroy
     serializer_class = ComplainSerializer
     permission_classes = [perms.OwnerPermission]
 
+
+
+class HomeView(View):
+    def get(self, request):
+        return render(request, 'home/home.html')

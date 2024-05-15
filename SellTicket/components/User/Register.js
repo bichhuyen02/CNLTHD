@@ -1,191 +1,230 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
-import Styles from './Styles';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, ScrollView, Image } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { AntDesign, Feather } from '@expo/vector-icons'; // Import icon từ thư viện Expo
 import * as ImagePicker from 'expo-image-picker';
-import Apis, { endpoints } from '../../Apis';
-import { ActivityIndicator } from 'react-native-paper';
-// import { append } from "domutils";
+import Apis, { endpoints } from '../../config/Apis';
 
-const {width} = Dimensions.get('window');
 
-export default Register = () => {
+const Register = () => {
 
   const [user, setUser] = useState({
-          'first_name': "",
-          'last_name': "",
-          'email': "",
-          'username': "",
-          'password': "",
-          'cofim_password': "",
-          'avatar': ""
-      });
-  
-      const [loading, setLoading] = useState();
-  
-      const register = async () => {
-        
-          setLoading(true);
+    'last_name': "",
+    'email': "",
+    'phone': "",
+    'username': "",
+    'password': "",
+    'cofim_password': "",
+    'avatar': ""
+  });
 
-          try {
-            if(user.password === user.cofim_password){
+  const [loading, setLoading] = useState();
 
-              let form = new FormData();
-             
-              for(key in user){
-                
-                  if(key ==='avatar'){
-                    
-                      form.append( key, {
-                          uri: user[key].uri,
-                          name: user[key].fileName,
-                          type: user[key].type
-                      })
-                  }else
-                      form.append(key, user[key]);
-              }
-              console.info(user.avatar)
-            //   const res = await Apis.post(endpoints['register'], form, {
-            //       headers:{
-            //           "Content-Type": 'multipart/formdata'
-            //       }
-            //   })
-            //   console.info(res.data);
-            }
-            else{
-                alert("2 pass không khớp!!")
-            }
-          } catch (error) {
-              console.error(error);
-          } finally{
-              setLoading(false);
+  const change = (field, value) => {
+    setUser(current => {
+      return { ...current, [field]: value }
+    })
+  }
+
+  const picker = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      alert("Permission denied!");
+    } else {
+      const res = await ImagePicker.launchImageLibraryAsync();
+      if (!res.canceled) {
+        change('avatar', res.assets[0]);
+      }
+    }
+  }
+
+  const handleRegister = async () => {
+    setLoading(true);
+
+    try {
+      if (user.password === user.cofim_password) {
+
+        let form = new FormData();
+
+        for (key in user) {
+
+          if (key === 'avatar') {
+
+            form.append(key, {
+              uri: user[key].uri,
+              name: user[key].fileName,
+              type: user[key].type
+            })
+          } else
+            form.append(key, user[key]);
+        }
+        console.info(user.avatar)
+        const res = await Apis.post(endpoints['register'], form, {
+          headers: {
+            "Content-Type": 'multipart/formdata'
           }
+        })
+        console.info(res.data);
       }
-  
-      const change = (field, value)=> {
-          setUser(current => {
-              return {...current, [field]: value}
-          })
+      else {
+        alert("2 pass không khớp!!")
       }
-  
-      const picker = async () => {
-          const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync();
-          if(status!=="granted"){
-              alert("Permission denied!");
-          }else{
-              const res = await ImagePicker.launchImageLibraryAsync();
-              if(!res.canceled){
-                  change('avatar', res.assets[0]);
-              }
-          }
-      }
+    } catch (error) {
+      console.error(error);i
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
-    <View style={Styles.container}>
-      <Image
-        source={{uri: 'https://www.bootdey.com/image/280x280/00BFFF/000000'}}
-        style={Styles.background}
-      />
-      {/* <View style={Styles.logoContainer}>
-        <Image
-          source={{uri: 'https://www.bootdey.com/img/Content/avatar/avatar6.png'}}
-          style={Styles.logo}
-        />
-      </View> */}
-      <View style={Styles.formContainer}>
-        {/* <Text style={Styles.title}>Sign Up</Text> */}
-        <View style={Styles.card}>
-{/* cuộn */}
+    <LinearGradient colors={['#2D99AE', '#764ba2']} style={styles.container}>
+      <View style={styles.formContainer}>
+        <Text style={styles.title}>Đăng ký tài khoản</Text>
         <ScrollView>
-{/* fisrt name */}
-          <View style={Styles.inputContainer}>
-            <Text style={Styles.label} >First Name</Text>
+          {/* tên */}
+          <View style={styles.inputView}>
+            <AntDesign name="user" size={24} color="#fff" style={styles.icon} />
             <TextInput
-              style={Styles.input}
-              value={user.first_name} onChangeText={t=>change('first_name',t)}
-              placeholder="first_name"
-              placeholderTextColor="#999"
+              style={styles.inputText}
+              placeholder="Họ tên"
+              placeholderTextColor="#fff"
+              onChangeText={t=>change('last_name',t)}
             />
           </View>
-{/* last name */}
-          <View style={Styles.inputContainer}>
-            <Text style={Styles.label} > Last Name</Text>
+          {/* sdt */}
+          <View style={styles.inputView}>
+            <AntDesign name="phone" size={24} color="#fff" style={styles.icon} />
             <TextInput
-              style={Styles.input}
-              value={user.last_name} onChangeText={t=>change('last_name',t)}
-              placeholder="last_name"
-              placeholderTextColor="#999"
+              style={styles.inputText}
+              placeholder="SĐT"
+              placeholderTextColor="#fff"
+              onChangeText={t=>change('phone',t)}
             />
           </View>
-{/* mail */}
-          <View style={Styles.inputContainer}>
-            <Text style={Styles.label}>Email</Text>
+          {/* mail */}
+          <View style={styles.inputView}>
+            <AntDesign name="mail" size={24} color="#fff" style={styles.icon} />
             <TextInput
-              style={Styles.input}
-              value={user.email} onChangeText={t=>change('email',t)}
+              style={styles.inputText}
               placeholder="Email"
-              placeholderTextColor="#999"
+              placeholderTextColor="#fff"
+              onChangeText={t=>change('email',t)}
             />
-          </View>
-{/* username */}
-          <View style={Styles.inputContainer}>
-            <Text style={Styles.label}>Username</Text>
+          </View> 
+          {/* username  */}
+          <View style={styles.inputView}>
+            <AntDesign name="user" size={24} color="#fff" style={styles.icon} />
             <TextInput
-              style={Styles.input}
-              value={user.username} onChangeText={t=>change('username',t)}
-              placeholder="Username"
-              placeholderTextColor="#999"
+              style={styles.inputText}
+              placeholder="Tên đăng nhập"
+              placeholderTextColor="#fff"
+              onChangeText={t=>change('username',t)}
             />
           </View>
-{/* pass */}
-          <View style={Styles.inputContainer}>
-            <Text style={Styles.label}>Password</Text>
+          {/* pass  */}
+          <View style={styles.inputView}>
+            <AntDesign name="lock" size={24} color="#fff" style={styles.icon} />
             <TextInput
-              style={Styles.input}
-              value={user.password} onChangeText={t=>change('password',t)}
-              placeholder="password"
-              placeholderTextColor="#999"
-              secureTextEntry
+              style={styles.inputText}
+              placeholder="Mật khẩu"
+              placeholderTextColor="#fff"
+              secureTextEntry={true}
+              onChangeText={t=>change('password',t)}
             />
           </View>
-{/* Cofim_pass */}
-         <View style={Styles.inputContainer}>
-            <Text style={Styles.label}>Cofim Password</Text>
+          {/* comfi */}
+          <View style={styles.inputView}>
+            <AntDesign name="lock" size={24} color="#fff" style={styles.icon} />
             <TextInput
-              style={Styles.input}
-              value={user.cofim_password} onChangeText={t=>change('cofim_password',t)}
-              placeholder="Cofim password"
-              placeholderTextColor="#999"
-              secureTextEntry
+              style={styles.inputText}
+              placeholder="Nhập lại mật khẩu"
+              placeholderTextColor="#fff"
+              secureTextEntry={true}
+              onChangeText={t=>change('cofim_password',t)}
             />
           </View>
-{/* ava */}
-        <TouchableOpacity onPress={picker}>
-            <Text style={{...styles.button, width: width}} >Chọn avatar....</Text>
-        </TouchableOpacity>
-
-        {user.avatar!==""?<Image source={{uri: user.avatar.uri}} style={{width: 100, height: 100, margin: 10}}></Image>:""}
-
-{/* button */}
-        {loading===true?<ActivityIndicator/>:<>
-          <TouchableOpacity style={Styles.button} onPress={register}>
-            <Text style={Styles.button}>Đăng kí</Text>
+          {/* ava  */}
+          <TouchableOpacity style={styles.inputView} onPress={picker}>
+            <Feather name="file" size={24} color="#fff" style={styles.icon} />
+            <Text style={[styles.inputText, { marginTop: 30 }]}>Tải ảnh đại diện</Text>
           </TouchableOpacity>
-        </>}
+
+          {user.avatar!==""?<Image source={{uri: user.avatar.uri}} style={{width: 100, height: 100, margin: 10}}>
+          </Image>:""}
+          {/* but  */}
+          <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
+            <Text style={styles.registerButtonText}>Đăng ký</Text>
+          </TouchableOpacity>
         </ScrollView>
-        </View>
       </View>
-    </View>
+
+    </LinearGradient>
   );
 };
 
-const styles = {
-    button: {
-        width: '100%',
-        height: 30,
-        backgroundColor: '#6ad3cc',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 4,
-        marginBottom: 6,
-      },
-  };
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  formContainer: {
+    width: '80%',
+    borderWidth: 2,
+    borderRadius: 25,
+    padding: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingHorizontal: 20,
+    paddingTop: 40,
+    borderColor: '#fff',
+    borderStyle: 'solid',
+  },
+  title: {
+    fontSize: 24,
+    color: '#fff',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  inputView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    borderRadius: 25,
+    height: 50,
+    marginBottom: 20,
+    paddingHorizontal: 20,
+  },
+  inputText: {
+    flex: 1,
+    height: 50,
+    color: '#fff',
+  },
+  avatarButton: {
+    backgroundColor: '#fff',
+    borderRadius: 25,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  avatarButtonText: {
+    color: '#764ba2',
+    fontSize: 16,
+  },
+  registerButton: {
+    backgroundColor: '#fff',
+    borderRadius: 25,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  registerButtonText: {
+    color: '#764ba2',
+    fontSize: 18,
+  },
+  icon: {
+    marginRight: 10,
+  },
+});
+
+export default Register;

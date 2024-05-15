@@ -63,7 +63,7 @@ router.register('user', views.UserViewSet, basename='user')
 
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('', views.HomeView.as_view(), name='Home'),
 
 
 
