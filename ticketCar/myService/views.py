@@ -150,14 +150,9 @@ class TripCarViewSet(viewsets.ViewSet, generics.ListAPIView):
         def get_queryset(self):
             queries = self.queryset
             if self.action.__eq__('list'):
-                name = self.request.query_params.get('name')
-                if name:
-                    queries = queries.filter(name=name)
-
-                province = self.request.query_params.get('province')
-                if province:
-                    queries = queries.filter(province=province)
-
+                trip = self.request.query_params.get('trip')
+                if trip:
+                    queries = queries.filter(trip=trip)
             return queries
 
         def get_permissions(self):

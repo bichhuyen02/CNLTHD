@@ -1,28 +1,51 @@
 import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Apis, { endpoints } from '../../config/Apis';
 
 export default Busses = ({ route, navigation }) => {
+    const [tripCar, setTripCar] = useState(null);
+    const [trip, setTrip] = useState(null);
     const {pointGo} = route.params
     const {pointUp} = route.params
     const {date} = route.params
     const {seat} =route.params
-    // useEffect(() => {
-    //     const loadPointGo = async () => {
-    //       if (pointGo !== undefined && pointGo !== "") {
-    //         const res = await Apis.get(endpoints['bStationDetail'](pointGo));
-    //         setPointGo(res.data)
-    //       }
-    //     }
-    //     loadPointGo()
-    //   }, [pointUp]);
-    return (
+    useEffect(() => {
+        const loadTrip = async () => {
+            if (date !== undefined && date !== "") {
+                const res = await Apis.get(endpoints['trip'],{
+                    params:{
+                        'dateGo': date
+                    }
+                });
+                setTrip(res.data)
+        }
+    }
+        const loadTripCar = async () => {
+          if (trip !== null) {
+            if (pointGo !== undefined && pointGo !== "") {
+                if (pointUp !== undefined && pointUp !== "") {
+                    const tripCarArray = [];
+                    trip.map( async (t) => {
+                        const res = await Apis.get(endpoints['tripCar'],{
+                            params:{
+                                'trip': t.id
+                            }});
+                        tripCarArray.push(res.data);
+                    })
+                    setTripCar(tripCarArray)
+          }}}
+        }
+        loadTrip();
+        loadTripCar()
+      }, [pointUp]);
+    return (<>
+    {tripCar===null?<Text>Không có dữ liệu</Text>:
         <ScrollView style={{ flex: 1, backgroundColor: '#F0F0F0' }}>
             <TouchableOpacity style={styles.Item} onPress={() => navigation.navigate("Ticket")} >
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 12 }}>
                     <Text style={{ fontSize: 16, fontWeight: '700' }}>Hoa Mai</Text>
-                    <Text style={{ fontSize: 16, fontWeight: '700', color: '#3366CC' }}>150000 VNĐ
+                    <Text style={{ fontSize: 16, fontWeight: '700', color: '#3366CC' }}>{tripCar.price} VNĐ
                         <Text style={{ fontSize: 14, fontWeight: '400', color: '#808080' }}>/chỗ</Text>
                     </Text>
                 </View>
@@ -57,8 +80,8 @@ export default Busses = ({ route, navigation }) => {
                     <MaterialCommunityIcons name="presentation-play" size={18} color="black" />
                 </View>
             </TouchableOpacity>
-        </ScrollView>
-    )
+        </ScrollView>}
+        </>)
 }
 
 const styles = StyleSheet.create({

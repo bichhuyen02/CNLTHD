@@ -13,6 +13,7 @@ export const endpoints = {
     'buses': "/buses/",
     'trip': "/trips/",
     'tripDetail': (trip_id) => `/trip/${trip_id}/`,
+    'tripCar': "/tripCar/",
 
     'invoice': '/invoice/',
     'bookTicket_onl': (trip_id) => `/trip/${trip_id}/ticket-onl/`,
