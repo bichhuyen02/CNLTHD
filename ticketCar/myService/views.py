@@ -17,7 +17,7 @@ from .firebase import storage
 
 
 # xe
-class CategoryViewSet(viewsets.ViewSet, generics.ListAPIView):
+class CategoryViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
@@ -49,20 +49,24 @@ class PriceTViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = PriceT.objects.all()
     serializer_class = PriceTSerializer
 
-class InvoiceViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView, generics.CreateAPIView):
+class InvoiceViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView, generics.CreateAPIView, generics.UpdateAPIView):
     queryset = Invoice.objects.all()
     serializer_class = InvoiceSerializer
 
-class TicketViewSet(viewsets.ViewSet, generics.DestroyAPIView, generics.ListAPIView,  generics.RetrieveAPIView):
+class TicketViewSet(viewsets.ViewSet, generics.DestroyAPIView, generics.ListAPIView,  generics.RetrieveAPIView, generics.UpdateAPIView):
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
 
     def get_queryset(self):
         queries = self.queryset
         if self.action.__eq__('list'):
-            chair = self.request.query_params.get('chair')
-            if chair:
-                queries = queries.filter(chair=chair)
+            customer = self.request.query_params.get('customer')
+            if customer:
+                queries = queries.filter(customer=customer)
+
+            staff = self.request.query_params.get('staff')
+            if staff:
+                queries = queries.filter(staff=staff)
 
             trip = self.request.query_params.get('trip')
             if trip:
@@ -101,6 +105,9 @@ class BStationViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveA
             if province:
                 queries = queries.filter(province=province)
 
+            active = True
+            if active:
+                queries = queries.filter(active=active)
         return queries
 class BuesViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = Bues.objects.all()
@@ -125,9 +132,12 @@ class BuesViewSet(viewsets.ViewSet, generics.ListAPIView):
             if province:
                 queries = queries.filter(province=province)
 
+            active = True
+            if active:
+                queries = queries.filter(active=active)
         return queries
 
-class TripViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView):
+class TripViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView, generics.UpdateAPIView):
     queryset = Trip.objects.all()
     serializer_class = TripSerializer
 
@@ -141,9 +151,13 @@ class TripViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIVi
             dateGo = self.request.query_params.get('dateGo')
             if dateGo:
                 queries = queries.filter(dateGo__icontains=dateGo)
+
+            active = True
+            if active:
+                queries = queries.filter(active=active)
         return queries
 
-class TripCarViewSet(viewsets.ViewSet, generics.ListAPIView):
+class TripCarViewSet(viewsets.ViewSet, generics.ListAPIView,generics.RetrieveAPIView):
         queryset = TripCar.objects.all()
         serializer_class = TripCarSerializer
 
@@ -153,6 +167,9 @@ class TripCarViewSet(viewsets.ViewSet, generics.ListAPIView):
                 trip = self.request.query_params.get('trip')
                 if trip:
                     queries = queries.filter(trip=trip)
+                active = True
+                if active:
+                    queries = queries.filter(active=active)
             return queries
 
         def get_permissions(self):
@@ -165,18 +182,17 @@ class TripCarViewSet(viewsets.ViewSet, generics.ListAPIView):
             invoice = Invoice.objects.get(id=request.data.get('invoice'))
             customer = Customer.objects.get(id=request.user.id)
             ticket = Ticket.objects.create(invoice=invoice, customer=customer, quantity=request.data.get('quantity'),
-                                           trip=self.get_object())
+                                           trip=self.get_object(), active=request.data.get('active'))
 
-            price = float(self.get_object().price.price)
-            quantity = float(request.data.get('quantity'))
-            invoice.amout = price * quantity
-
-            self.get_object().trip.quantity = self.get_object().trip.quantity - quantity
-
+            # price = float(self.get_object().price.price)
+            # quantity = float(request.data.get('quantity'))
+            # invoice.amout = price * quantity
+            #
+            # self.get_object().trip.quantity = self.get_object().trip.quantity - quantity
 
             ticket.save()
-            invoice.save()
-            self.get_object().save()
+            # invoice.save()
+            # self.get_object().save()
 
             return Response(TicketSerializer(ticket, context={
                 'request': request
@@ -188,17 +204,17 @@ class TripCarViewSet(viewsets.ViewSet, generics.ListAPIView):
             phones = request.data.get('phone')
             user = Customer.get_or_create(phone=phones.strip())
             ticket = Ticket.objects.create(invoice=invoice, staff=request.user, customer=user, quantity=request.data.get('quantity'),
-                                           trip=self.get_object())
+                                           trip=self.get_object(), active=request.data.get('active'))
 
-            price = float(self.get_object().price.price)
-            quantity = float(request.data.get('quantity'))
-            invoice.amout = price * quantity
-
-            self.get_object().trip.quantity = self.get_object().trip.quantity - quantity
+            # price = float(self.get_object().price.price)
+            # quantity = float(request.data.get('quantity'))
+            # invoice.amout = price * quantity
+            #
+            # self.get_object().trip.quantity = self.get_object().trip.quantity - quantity
 
             ticket.save()
-            invoice.save()
-            self.get_object().save()
+            # invoice.save()
+            # self.get_object().save()
 
             return Response(TicketSerializer(ticket, context={
                 'request': request
@@ -377,8 +393,3 @@ class ComplainViewSet(viewsets.ViewSet, generics.UpdateAPIView, generics.Destroy
     serializer_class = ComplainSerializer
     permission_classes = [perms.OwnerPermission]
 
-
-
-class HomeView(View):
-    def get(self, request):
-        return render(request, 'home/home.html')

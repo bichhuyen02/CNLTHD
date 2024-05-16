@@ -12,15 +12,6 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ['id', 'name', 'active']
 class CarSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField(source='image')
-
-    def get_image(self, obj):
-        request = self.context.get('request')
-        if obj.image:
-            if request:
-                return request.build_absolute_uri("/static/%s" % obj.image.name)
-            return "/static/%s" % obj.image.name
-
 
     class Meta:
         model = Car
@@ -100,19 +91,10 @@ class StaffSerializer(serializers.ModelSerializer):
         model = Staff
         fields = ['birth', 'user']
 class DriverSerializer(serializers.ModelSerializer):
-    bangLai = serializers.SerializerMethodField(source='image')
-
-    def get_image(self, obj):
-        request = self.context.get('request')
-        if obj.bangLai:
-            if request:
-                return request.build_absolute_uri("/static/%s" % obj.bangLai.name)
-            return "/static/%s" % obj.bangLai.name
-
 
     class Meta:
         model = Driver
-        fields = ['birth', 'user', 'bangLai']
+        fields = ['birth', 'user', 'license']
 class CustomerSerializer(serializers.ModelSerializer):
 
     class Meta:

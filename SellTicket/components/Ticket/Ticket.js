@@ -1,13 +1,68 @@
 import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import React from "react";
+import React, { useEffect } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
+import Apis, { endpoints } from '../../config/Apis';
 
 
 
-export default Ticket = ({ navigation }) => {
+export default Ticket = ({ route, navigation }) => {
+    const { tripCarId } = route.params
+    const { carId } = route.params
+    const { seat } = route.params
+    const [ticket, setTicket] = useState(null);
+    const [invoice, setInvoice] = useState(null);
+    const [tripCar, setTripCar] = useState(null);
+    const [trip, setTrip] = useState(null);
+    const [bues, setBues] = useState(null);
+    const [car, setCar] = useState(null);
+    const [category, setCategory] = useState(null);
+
     const Tab = createMaterialTopTabNavigator();
+
+    useEffect(() => {
+        const loadCar = async () => {
+            if (carId !== undefined && carId !== "") {
+                const res = await Apis.get(endpoints['carDetail'](carId));
+                setCar(res.data)
+            }
+        }
+        const loadTripCar = async () => {
+            if (tripCarId !== undefined && tripCarId !== "") {
+                const res = await Apis.get(endpoints['tripCarDetail'](tripCarId));
+                setTripCar(res.data)
+            }
+        }
+        loadCar();
+        loadTripCar();
+    }, [tripCarId]);
+
+    useEffect(()=>{
+        const loadCategory = async () => {
+            if (car !== null) {
+                const res = await Apis.get(endpoints['categoryDetail'](car.category));
+                setCategory(res.data)
+            }
+        }
+
+        const loadTrip = async () => {
+            if (tripCar !== null) {
+                const res = await Apis.get(endpoints['tripDetail'](tripCar.trip));
+                setTrip(res.data)
+            }
+        }
+
+        const loadBues = async () => {
+            if (trip !== null) {
+                const res = await Apis.get(endpoints['buesDetail'](trip.bues));
+                setBues(res.data)
+            }
+        }
+        loadCategory();
+        loadTrip();
+        loadBues();
+    });
 
     function DacTrung() {
         return (
@@ -15,8 +70,8 @@ export default Ticket = ({ navigation }) => {
                 <View style={styles.ItemDT} onPress={() => navigation.navigate("Ticket")}>
                     <View style={{ margin: '4%', }}>
                         <View style={styles.InputText}>
-                            <Text style={{ fontSize: 16, fontWeight: 600 }}> Hoa Mai </Text>
-                            <Text style={{ marginBottom: 8, marginTop: 5, color: '#696969' }}> Ghế ngồi 16 chỗ</Text>
+                            <Text style={{ fontSize: 16, fontWeight: 600 }}> {category.name} </Text>
+                            <Text style={{ marginBottom: 8, marginTop: 5, color: '#696969' }}> Ghế ngồi {car.quantity} chỗ</Text>
                         </View>
 
                         <View style={styles.InputText}>
@@ -63,7 +118,7 @@ export default Ticket = ({ navigation }) => {
                         </View>
                     </View>
                 </View>
-           </ScrollView>
+            </ScrollView>
 
         )
     }
@@ -71,21 +126,21 @@ export default Ticket = ({ navigation }) => {
     function Ve() {
         return (
             <View>
-                <Text style={{ fontSize: 14, marginTop: 10, marginLeft: '5%', color:'blue'}}>Thông tin quan trọng</Text>
+                <Text style={{ fontSize: 14, marginTop: 10, marginLeft: '5%', color: 'blue' }}>Thông tin quan trọng</Text>
                 <View style={styles.ItemVe}>
-                    <Text style={{ fontSize: 18, fontWeight: 600, marginTop:'2%', left:'5%' }}>Điều khoản và điều kiện</Text>
-                    <View style={{ fontSize: 20, marginTop: 10, marginLeft: '5%'}}>
+                    <Text style={{ fontSize: 18, fontWeight: 600, marginTop: '2%', left: '5%' }}>Điều khoản và điều kiện</Text>
+                    <View style={{ fontSize: 20, marginTop: 10, marginLeft: '5%' }}>
                         <View style={styles.text1}>
                             <Text>• Vé khởi hành trong giai đoạn Cuối năm và Tết Nguyên đán có thể không được hoàn, đổi lịch.</Text>
-                            <Text>•	Yêu cầu đeo khẩu trang khi lên xe </Text> 
-                            <Text>•	Có mặt tại văn phòng/quầy vé/bến xe trước 15 phút để làm thủ tục lên xe </Text> 
-                            <Text>• Không mang đồ ăn, thức ăn có mùi lên xe </Text>  
-                            <Text>•	Không hút thuốc, uống rượu, sử dụng chất kích thích trên xe </Text> 
-                            <Text>•	Không mang các vật dễ cháy nổ lên xe </Text> 
-                            <Text>•	Không vứt rác trên xe </Text> 
+                            <Text>•	Yêu cầu đeo khẩu trang khi lên xe </Text>
+                            <Text>•	Có mặt tại văn phòng/quầy vé/bến xe trước 15 phút để làm thủ tục lên xe </Text>
+                            <Text>• Không mang đồ ăn, thức ăn có mùi lên xe </Text>
+                            <Text>•	Không hút thuốc, uống rượu, sử dụng chất kích thích trên xe </Text>
+                            <Text>•	Không mang các vật dễ cháy nổ lên xe </Text>
+                            <Text>•	Không vứt rác trên xe </Text>
                         </View>
                     </View>
-                   
+
 
                 </View>
             </View>
@@ -101,7 +156,7 @@ export default Ticket = ({ navigation }) => {
                         <View style={{ flexDirection: 'row', width: '100%' }}>
                             <Text style={{ width: '13%', textAlign: 'center' }}>04:30</Text>
                             <FontAwesome name="circle-o" size={24} color="#00CCFF" style={{ width: '10%' }} />
-                            <Text style={{ width: '70%' }}>Văn phòng quận 1A</Text>
+                            <Text style={{ width: '70%' }}>{tripCar.pointGo}</Text>
                         </View>
 
                         <View style={{ flexDirection: 'row' }}>
@@ -111,7 +166,7 @@ export default Ticket = ({ navigation }) => {
                         <View style={{ flexDirection: 'row', width: '100%' }}>
                             <Text style={{ width: '13%', textAlign: 'center' }}>06:30</Text>
                             <FontAwesome name="circle" size={24} color="#00CCFF" style={{ width: '10%' }} />
-                            <Text style={{ width: '70%' }}>Bến xe Bà Rịa 1</Text>
+                            <Text style={{ width: '70%' }}>{tripCar.pointUp}</Text>
                         </View>
                     </View>
 
@@ -125,7 +180,7 @@ export default Ticket = ({ navigation }) => {
                 </View>
                 <Text style={{ fontSize: 20, marginTop: 10, marginLeft: '5%' }}>Tuyến đường</Text>
                 <View style={styles.ItemTD}>
-                    <Text>Quận 5 - Đồng Nai</Text>
+                    <Text>{bues.departure} - {bues.destination}</Text>
                 </View>
             </View>
         )
@@ -133,18 +188,21 @@ export default Ticket = ({ navigation }) => {
 
     return (
         <View style={{ flex: 1 }}>
-                <Tab.Navigator>
-                    <Tab.Screen name="DacTrung" component={DacTrung} options={{ title: 'Đặc trưng' }} />
-                    <Tab.Screen name="Ve" component={Ve} options={{ title: 'Vé' }} />
-                    <Tab.Screen name="TuyenDuong" component={TuyenDuong} options={{ title: 'Tuyến đường' }} />
-                </Tab.Navigator>
+            <Tab.Navigator>
+                <Tab.Screen name="DacTrung" component={DacTrung} options={{ title: 'Đặc trưng' }} />
+                <Tab.Screen name="Ve" component={Ve} options={{ title: 'Vé' }} />
+                <Tab.Screen name="TuyenDuong" component={TuyenDuong} options={{ title: 'Tuyến đường' }} />
+            </Tab.Navigator>
 
             <View style={{ flex: 0.1, padding: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'white', borderTopWidth: 1, borderColor: '#C0C0C0' }}>
                 <Text style={{ fontSize: 20, fontWeight: '700', color: '#3366CC' }}>150.000 VNĐ
                     <Text style={{ fontSize: 16, fontWeight: '400', color: '#808080' }}>/chỗ</Text>
                 </Text>
                 <TouchableOpacity style={{ backgroundColor: '#1E90FF', paddingTop: 10, paddingBottom: 10, paddingLeft: 30, paddingRight: 30, borderRadius: 5 }}
-                    onPress={() => navigation.navigate("Pay")}>
+                    onPress={() => navigation.navigate("Pay",{"seat":seat, "tripCarId": tripCarId, "ticket": ticket, "invoice": invoice, 
+                        "departure": bues.departure, "destination": bues.destination, "date": trip.dateGo, "time": trip.timeGo, 
+                        "pointGo": tripCar.pointGo, "pointUp": tripCar.pointUp, "price": tripCar.price, "quantity": trip.quantity
+                    })}>
                     <Text style={{ color: 'white', fontSize: 18 }}>Chọn</Text>
                 </TouchableOpacity>
             </View>
@@ -225,8 +283,8 @@ const styles = StyleSheet.create({
         marginTop: 3,
         marginLeft: 10
     },
-    
-    ItemTD:{
+
+    ItemTD: {
         backgroundColor: 'white',
         borderRadius: 5,
         width: '90%',
@@ -234,8 +292,8 @@ const styles = StyleSheet.create({
         padding: 10,
     },
 
-    text1:{
-        fontSize:18,
+    text1: {
+        fontSize: 18,
         lineHeight: 1.5,
         marginBottom: 19,
     }

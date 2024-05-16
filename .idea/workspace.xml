@@ -6,9 +6,18 @@
   <component name="ChangeListManager">
     <list default="true" id="c32702d7-f59b-4a20-bd0e-f04364446cf5" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SellTicket/components/Ticket/Pay.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/components/Ticket/Pay.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SellTicket/components/Ticket/Ticket.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/components/Ticket/Ticket.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SellTicket/components/Trip/Busses.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/components/Trip/Busses.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SellTicket/config/Apis.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/config/Apis.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ticketCar/myService/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/myService/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ticketCar/myService/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/myService/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ticketCar/myService/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/myService/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ticketCar/myService/templates/admin/add_form.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ticketCar/myService/templates/admin/base_site.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ticketCar/myService/templates/home/home.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/ticketCar/myService/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/myService/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ticketCar/ticketCar/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/ticketCar/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -22,7 +22,6 @@ class MyServiceAdmin(admin.ModelAdmin):
     def get_model_perms(self, request):
         # Lấy thông tin người dùng đăng nhập
         user = request.user
-        print(user.role)
         # Kiểm tra quyền truy cập của người dùng
         if user.role.__eq__('Admin'):
             # Người dùng là superuser, không áp dụng exclude

@@ -79,6 +79,7 @@ class Category(BaseModel):
     name = models.CharField(max_length=100, null=True)
     def __str__(self):
         return self.name
+
 class Car(BaseModel):
     licensePlates = models.CharField(max_length=20, null=True)
     image = models.CharField(max_length=255, blank=True)
@@ -86,7 +87,7 @@ class Car(BaseModel):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return "Biển số: {}, Loại: {}".format(self.licensePlates, self.category.name)
+        return "Biển số: {}, Loại: {}".format(self.licensePlates, self.category)
 
 
 
@@ -123,7 +124,7 @@ class Trip(BaseModel):
     car = models.ForeignKey(Car, on_delete=models.RESTRICT)
     bues = models.ForeignKey(Bues, on_delete=models.CASCADE)
     def __str__(self):
-        return "xe: {}, chuyến: {}".format(self.car.category.name, self.bues)
+        return "xe: {}, chuyến: {}".format(self.car, self.bues)
 class TripCar(BaseModel):
     pointGo = models.ForeignKey(BStation, related_name='tripCar_go', on_delete=models.CASCADE)
     pointUp = models.ForeignKey(BStation, related_name='tripCar_up', on_delete=models.CASCADE)
