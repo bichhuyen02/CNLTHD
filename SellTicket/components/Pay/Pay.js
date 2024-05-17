@@ -160,7 +160,7 @@ const goToHome = ()=>{
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
                             <View style={{ flexDirection: 'row' }}>
                                 <AntDesign name="creditcard" size={24} color="black" />
-                                <Text style={{ marginLeft: 5, fontSize: 15 }}>Thanh toán bằng Ngân Hàng</Text>
+                                <Text style={{ marginLeft: 5, fontSize: 15 }}>Thanh toán bằng MOMO</Text>
                             </View>
 
                             <TouchableOpacity onPress={() => handleOptionSelect('option2')}>

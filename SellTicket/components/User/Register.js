@@ -70,7 +70,7 @@ const Register = () => {
         alert("2 pass không khớp!!")
       }
     } catch (error) {
-      console.error(error);i
+      console.error(error);
     } finally {
       setLoading(false);
     }

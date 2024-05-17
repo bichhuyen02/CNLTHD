@@ -35,6 +35,7 @@ const Signin = ({ navigation }) => {
         dispatch({
                     'type': 'login',
                     'payload': {
+                        'id': user.data.id,
                         'name': user.data.last_name,
                         'username': user.data.username,
                         'phone': user.data.phone,

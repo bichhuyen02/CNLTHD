@@ -21,17 +21,23 @@ export const endpoints = {
     'tripCar': "/tripCar/",
     'tripCarDetail': (tripCar_id) => `/tripCar/${tripCar_id}/`,
 
+    'complain': "/complain/",
+    'complainT': (tripCar_id) =>`/tripCar/${tripCar_id}/add_complain/`,
+    'complainDetail': (complain_id) =>`/complain/${complain_id}/`,
+
     'invoice': '/invoice/',
     'invoiceDetail': (invoice_id) =>`/invoice/${invoice_id}/`,
     'bookTicket_onl': (trip_id) => `/trip/${trip_id}/ticket-onl/`,
     'bookTicket': (trip_id) => `/trip/${trip_id}/ticket/`,
     'ticket': "/ticket/",
     'ticketDetail': (ticket_id) =>`/ticket/${ticket_id}/`,
+    'ticketCustomer':(ticket_id) => `/customer/${ticket_id}/ticket/`,
 
     
     'login': '/o/token/',
     'current_user': '/user/current-user/',
     'register': '/user/user/',
+    'customers': '/customer/',
 }
 
 export const authApi = (accessToken) => axios.create({

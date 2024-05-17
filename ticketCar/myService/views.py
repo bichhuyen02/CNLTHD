@@ -61,8 +61,9 @@ class TicketViewSet(viewsets.ViewSet, generics.DestroyAPIView, generics.ListAPIV
         queries = self.queryset
         if self.action.__eq__('list'):
             customer = self.request.query_params.get('customer')
-            if customer:
-                queries = queries.filter(customer=customer)
+            c = Customer.objects.get(id=customer)
+            if c:
+                queries = queries.filter(customer=c)
 
             staff = self.request.query_params.get('staff')
             if staff:
@@ -231,24 +232,6 @@ class TripCarViewSet(viewsets.ViewSet, generics.ListAPIView,generics.RetrieveAPI
                 'request': request
             }).data, status=status.HTTP_201_CREATED)
 
-        @action(methods=['patch'], url_path='up_complain', detail=True)
-        def up_complain(self, request, pk):
-            complain = Complain.objects.update(conten=request.data.get('content'))
-            complain.save()
-
-            return Response(TicketSerializer(complain, context={
-                'request': request
-            }).data, status=status.HTTP_202_ACCEPTED)
-
-        @action(methods=['delete'], url_path='de_complain', detail=True)
-        def de_complain(self, request, pk):
-            complain = Complain.objects.delete(pk)
-            complain.save()
-
-            return Response(TicketSerializer(complain, context={
-                'request': request
-            }).data, status=status.HTTP_201_CREATED)
-
 
 
 
@@ -347,10 +330,10 @@ class CustomerViewSet(viewsets.ViewSet, generics.ListAPIView):
 
     def get_queryset(self):
         queries = self.queryset
-        phone = self.request.query_params.get('phone')
-        if phone:
-            queries = queries.filter(phone=phone)
-
+        if self.action.__eq__('list'):
+            user = self.request.query_params.get('user')
+            if user:
+                queries = queries.filter(user=user)
         return queries
 
     def get_permissions(self):
@@ -388,8 +371,20 @@ class StaffViewSet(viewsets.ViewSet, generics.ListAPIView):
 
 
 # complain
-class ComplainViewSet(viewsets.ViewSet, generics.UpdateAPIView, generics.DestroyAPIView, generics.ListAPIView):
+class ComplainViewSet(viewsets.ViewSet, generics.UpdateAPIView, generics.DestroyAPIView, generics.ListAPIView, generics.RetrieveAPIView):
     queryset = Complain.objects.all()
     serializer_class = ComplainSerializer
     permission_classes = [perms.OwnerPermission]
+
+    def get_queryset(self):
+        queries = self.queryset
+        if self.action.__eq__('list'):
+            trip = self.request.query_params.get('trip')
+            if trip:
+                queries = queries.filter(trip=trip)
+            user = self.request.query_params.get('customer')
+            c = Customer.objects.get(id=user)
+            if c:
+                queries = queries.filter(customer=c)
+        return queries
 

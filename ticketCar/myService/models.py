@@ -123,6 +123,7 @@ class Trip(BaseModel):
     driver = models.ForeignKey(Driver, on_delete=models.RESTRICT)
     car = models.ForeignKey(Car, on_delete=models.RESTRICT)
     bues = models.ForeignKey(Bues, on_delete=models.CASCADE)
+    complete = models.BooleanField(default=False)
     def __str__(self):
         return "xe: {}, chuyến: {}".format(self.car, self.bues)
 class TripCar(BaseModel):
@@ -130,6 +131,7 @@ class TripCar(BaseModel):
     pointUp = models.ForeignKey(BStation, related_name='tripCar_up', on_delete=models.CASCADE)
     price = models.ForeignKey(PriceT, on_delete=models.CASCADE)
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
+
 
 
 
