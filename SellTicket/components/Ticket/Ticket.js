@@ -30,7 +30,7 @@ export default Ticket = ({ route, navigation }) => {
         }
         const loadTripCar = async () => {
             if (tripCarId !== undefined && tripCarId !== "") {
-                const res = await Apis.get(endpoints['tripCarDetail'](tripCarId));
+                const res = await Apis.get(endprovinces['tripCarDetail'](tripCarId));
                 setTripCar(res.data)
             }
         }
@@ -41,21 +41,21 @@ export default Ticket = ({ route, navigation }) => {
     useEffect(()=>{
         const loadCategory = async () => {
             if (car !== null) {
-                const res = await Apis.get(endpoints['categoryDetail'](car.category));
+                const res = await Apis.get(endprovinces['categoryDetail'](car.category));
                 setCategory(res.data)
             }
         }
 
         const loadTrip = async () => {
             if (tripCar !== null) {
-                const res = await Apis.get(endpoints['tripDetail'](tripCar.trip));
+                const res = await Apis.get(endprovinces['tripDetail'](tripCar.trip));
                 setTrip(res.data)
             }
         }
 
         const loadBues = async () => {
             if (trip !== null) {
-                const res = await Apis.get(endpoints['buesDetail'](trip.bues));
+                const res = await Apis.get(endprovinces['buesDetail'](trip.bues));
                 setBues(res.data)
             }
         }
@@ -156,7 +156,7 @@ export default Ticket = ({ route, navigation }) => {
                         <View style={{ flexDirection: 'row', width: '100%' }}>
                             <Text style={{ width: '13%', textAlign: 'center' }}>04:30</Text>
                             <FontAwesome name="circle-o" size={24} color="#00CCFF" style={{ width: '10%' }} />
-                            <Text style={{ width: '70%' }}>{tripCar.pointGo}</Text>
+                            <Text style={{ width: '70%' }}>{tripCar.provinceGo}</Text>
                         </View>
 
                         <View style={{ flexDirection: 'row' }}>
@@ -166,7 +166,7 @@ export default Ticket = ({ route, navigation }) => {
                         <View style={{ flexDirection: 'row', width: '100%' }}>
                             <Text style={{ width: '13%', textAlign: 'center' }}>06:30</Text>
                             <FontAwesome name="circle" size={24} color="#00CCFF" style={{ width: '10%' }} />
-                            <Text style={{ width: '70%' }}>{tripCar.pointUp}</Text>
+                            <Text style={{ width: '70%' }}>{tripCar.provinceUp}</Text>
                         </View>
                     </View>
 
@@ -201,14 +201,16 @@ export default Ticket = ({ route, navigation }) => {
                 <TouchableOpacity style={{ backgroundColor: '#1E90FF', paddingTop: 10, paddingBottom: 10, paddingLeft: 30, paddingRight: 30, borderRadius: 5 }}
                     onPress={() => navigation.navigate("Pay",{"seat":seat, "tripCarId": tripCarId, "ticket": ticket, "invoice": invoice, 
                         "departure": bues.departure, "destination": bues.destination, "date": trip.dateGo, "time": trip.timeGo, 
-                        "pointGo": tripCar.pointGo, "pointUp": tripCar.pointUp, "price": tripCar.price, "quantity": trip.quantity
+                        "provinceGo": tripCar.provinceGo, "provinceUp": tripCar.provinceUp, "price": tripCar.price, "quantity": trip.quantity
                     })}>
                     <Text style={{ color: 'white', fontSize: 18 }}>Chọn</Text>
                 </TouchableOpacity>
             </View>
         </View>
     )
-}
+};
+
+
 const styles = StyleSheet.create({
     ItemDT: {
         top: 18,
@@ -298,4 +300,4 @@ const styles = StyleSheet.create({
         marginBottom: 19,
     }
 
-})
+});

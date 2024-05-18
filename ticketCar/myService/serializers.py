@@ -61,7 +61,7 @@ class TripCarSerializer(serializers.ModelSerializer):
 class BuesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bues
-        fields = '__all__'
+        fields = ['id', 'destination', 'active', 'departure']
 
 
 

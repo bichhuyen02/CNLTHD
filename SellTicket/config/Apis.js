@@ -1,7 +1,6 @@
 import axios from "axios";
 
 const HOST = "https://bichhuyen02.pythonanywhere.com"
-// const HOST = "http://127.0.0.1:8000"
 
 export const endpoints = {
     'categories': "/categories/",
@@ -18,6 +17,7 @@ export const endpoints = {
 
     'trip': "/trips/",
     'tripDetail': (trip_id) => `/trip/${trip_id}/`,
+    'tripDCar':(trip_id) =>`/trips/${trip_id}/tripCar/`,
     'tripCar': "/tripCar/",
     'tripCarDetail': (tripCar_id) => `/tripCar/${tripCar_id}/`,
 

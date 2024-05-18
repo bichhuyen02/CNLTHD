@@ -11,8 +11,8 @@ from . import perms
 from .serializers import CategorySerializer, CarSerializer, PriceTSerializer, BStationSerializer, \
     TripSerializer, UserSerializer, DriverSerializer, CustomerSerializer, StaffSerializer, ComplainSerializer, \
     InvoiceSerializer, TicketSerializer, ProvinceSerializer, BuesSerializer, TripCarSerializer
-from django.core.files.storage import default_storage
-from .firebase import storage
+
+from django.contrib.auth.hashers import make_password
 
 
 
@@ -86,7 +86,7 @@ class ProvinceViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveA
 
     @action(methods=['get'], detail=True)
     def bStation(self, request, pk):
-        l = self.get_object().bStation_set.all()
+        l = self.get_object().bstation_set.all()
         return Response(BStationSerializer(l, many=True, context={
             'request': request
         }).data, status=status.HTTP_200_OK)
@@ -110,7 +110,7 @@ class BStationViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveA
             if active:
                 queries = queries.filter(active=active)
         return queries
-class BuesViewSet(viewsets.ViewSet, generics.ListAPIView):
+class BuesViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIView):
     queryset = Bues.objects.all()
     serializer_class = BuesSerializer
 
@@ -151,12 +151,20 @@ class TripViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveAPIVi
 
             dateGo = self.request.query_params.get('dateGo')
             if dateGo:
-                queries = queries.filter(dateGo__icontains=dateGo)
+                subDateGo = dateGo[0:7]
+                queries = queries.filter(dateGo__icontains=subDateGo)
 
             active = True
             if active:
                 queries = queries.filter(active=active)
         return queries
+
+    @action(methods=['get'], detail=True)
+    def tripCar(self, request, pk):
+        l = self.get_object().tripCar_set.all()
+        return Response(TripCarSerializer(l, many=True, context={
+            'request': request
+        }).data, status=status.HTTP_200_OK)
 
 class TripCarViewSet(viewsets.ViewSet, generics.ListAPIView,generics.RetrieveAPIView):
         queryset = TripCar.objects.all()
@@ -168,6 +176,15 @@ class TripCarViewSet(viewsets.ViewSet, generics.ListAPIView,generics.RetrieveAPI
                 trip = self.request.query_params.get('trip')
                 if trip:
                     queries = queries.filter(trip=trip)
+
+                pointGo = self.request.query_params.get('pointGo')
+                if pointGo:
+                    queries = queries.filter(pointGo=pointGo)
+
+                pointUp = self.request.query_params.get('pointUp')
+                if pointUp:
+                    queries = queries.filter(pointUp=pointUp)
+
                 active = True
                 if active:
                     queries = queries.filter(active=active)
@@ -286,25 +303,16 @@ class UserViewSet(viewsets.ViewSet, generics.UpdateAPIView, generics.DestroyAPIV
 
     @action(methods=['post'], detail=False)
     def user(self, request):
-        image = request.data.get('avatar')
-        if image:
-            # Convert the InMemoryUploadedFile to string
-            filename = image.name
+        password = request.data.get('password')
+        hashed_password = make_password(password)
 
-            # Upload the image to Firebase Storage
-            file_path = default_storage.save('tmp/' + filename, image)
-            with default_storage.open(file_path, 'rb') as file:
-                storage.child("ava/" + filename).put(file)
+        user = User.objects.create(username=request.data.get('username'), password=hashed_password,
+                                   last_name=request.data.get('last_name'), email=request.data.get('email'),
+                                   phone=request.data.get('phone'))
+        user.save()
+        Customer.objects.create(user=user)
+        return Response(UserSerializer(user, context={'request': request}).data, status=status.HTTP_201_CREATED)
 
-            download_url = storage.child("ava/" + filename).get_url(None)
-            print(download_url)
-            image = download_url
-            user = User.objects.create(avatar=download_url, username=request.data.get('username'), password=request.data.get('password'),
-            first_name=request.data.get('first_name'), last_name=request.data.get('last_name'), email=request.data.get('email'), phone=request.data.get('phone'))
-            user.save()
-            Customer.objects.create(user=user)
-            return Response(UserSerializer(user, context={'request': request}).data, status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class DriverViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = Driver.objects.all()

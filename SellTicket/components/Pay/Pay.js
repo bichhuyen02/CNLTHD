@@ -17,6 +17,7 @@ export default Pay = ({ route, navigation }) => {
     const {pointUp} = route.params
     const {price} = route.params
     const {quantity} = route.params
+    
     const [count, setCount] = useState(seat);
     const [unitPrice, setUnitPrice] = useState(price); //cho so mac dinh tien ve ở day
     const [selectedOption, setSelectedOption] = useState(null);

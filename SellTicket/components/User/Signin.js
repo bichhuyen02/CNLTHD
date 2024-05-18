@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons'; // Import icon từ thư viện Expo
 import MyContext from '../../config/MyContext';
 import {client_id, client_secret} from '../../key/Key_app'
-import Apis, { authApi, endpoints } from '../../config/Apis';
+import Apis, { authApi, endprovinces } from '../../config/Apis';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
@@ -19,7 +19,7 @@ const Signin = ({ navigation }) => {
   const handleLogin = async () => {
     setLoading(true);
     try {
-        let res = await Apis.post(endpoints['login'], {
+        let res = await Apis.post(endprovinces['login'], {
           "username": username, 
           "password": password,
           "client_id": client_id,
@@ -30,7 +30,7 @@ const Signin = ({ navigation }) => {
         console.info(res.data)
 
         await AsyncStorage.setItem('access-token', res.data.access_token)
-        let user = await authApi(res.data.access_token).get(endpoints['current_user']);
+        let user = await authApi(res.data.access_token).get(endprovinces['current_user']);
         console.info(user.data)
         dispatch({
                     'type': 'login',

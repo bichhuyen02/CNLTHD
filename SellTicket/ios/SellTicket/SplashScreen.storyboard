@@ -81,7 +81,7 @@
         </viewController>
         <placeholder placeholderIdentifier="IBFirstResponder" id="EXPO-PLACEHOLDER-1" userLabel="First Responder" sceneMemberID="firstResponder"/>
       </objects>
-      <point key="canvasLocation" x="140.625" y="129.4921875"/>
+      <province key="canvasLocation" x="140.625" y="129.4921875"/>
     </scene>
   </scenes>
   <resources>

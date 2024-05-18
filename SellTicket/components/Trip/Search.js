@@ -1,15 +1,15 @@
-
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, ScrollView,} from 'react-native';
+import { View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity, } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import Apis, { endpoints } from '../../config/Apis';
 
-s
 
 export default Search = ({ route, navigation }) => {
-    const [bStation, setBStation] = useState(null);
+
     const [province, setProvince] = useState(null);
-    const [name, setName] = useState(null);
+
+    const provinceGoId = route.params?.provinceGo
+
     useEffect(() => {
         const loadProvince = async () => {
             const res = await Apis.get(endpoints['province']);
@@ -17,63 +17,43 @@ export default Search = ({ route, navigation }) => {
         }
         loadProvince();
     }, [])
-    const loadBStation =  async (provinceId) =>{
-        const res = await Apis.get(endpoints['bStation'], {
-            params: {
-                "province": provinceId
-            }
-        });
-        setBStation(res.data)
-    }
-    const goToHome = (point) => {
+
+    const goToHome = (province) => {
         const { index } = route.params
-        if(index == 1){
-            navigation.navigate("Search", { "pointGo": point })
+        if (index === 1) {
+            navigation.navigate("Home", { "provinceGo": province })
         }
         else
-            navigation.navigate("Search", { "pointUp": point })
+            navigation.navigate("Home", { "provinceUp": province, "provinceGo": provinceGoId })
     }
 
-    return (
+    return (<>{province === null ? <View style={styles.searchContainer}>
+        <View style={styles.inputWrapper}>
+            <AntDesign name="search1" size={24} color="black" style={styles.searchIcon} />
+            <TextInput style={styles.inputText} placeholder="Chọn thành phố, khu vực, điểm lên xe ..." />
+        </View><Text>Không có dữ liệu</Text></View> :
         <View style={styles.searchContainer}>
             <View style={styles.inputWrapper}>
                 <AntDesign name="search1" size={24} color="black" style={styles.searchIcon} />
-                {bStation===null?<TextInput style={styles.inputText} placeholder="Chọn thành phố, khu vực, điểm lên xe ..." />:
-                <TextInput style={styles.inputText} placeholder={name} />
-                }
+                <TextInput style={styles.inputText} placeholder="Chọn thành phố, khu vực, điểm lên xe ..." />
             </View>
-
             <View style={{ marginTop: '5%' }}>
                 <View style={styles.ItemSearch}>
-                    <View>
-                        {bStation===null?<ScrollView>
-                                {province.map(p => (
-                                    <TouchableOpacity onPress={() => {loadBStation(p.id), setName(p.name)}}>
-                                        <View style={styles.Text}>
-                                            <Text style={{ fontSize: 16, fontWeight: 600, marginTop: '5%', marginLeft: '2%' }}>{p.name}</Text>
-                                            <Text style={{ marginBottom: 8, marginTop: 5, color: '#696969', marginLeft: '2%' }}> Tất cả các địa điểm lên xe của {p.name}</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                ))}</ScrollView>:
-                                <ScrollView>
-                                {bStation.map(b => (
-                                    <TouchableOpacity onPress={()=>goToHome(b.id)}>
-                                        <View style={styles.Text}>
-                                            <Text style={{ fontSize: 16, fontWeight: 600, marginTop: '5%', marginLeft: '2%' }}>b.name</Text>
-                                            <Text style={{ marginBottom: 8, marginTop: 5, color: '#696969', marginLeft: '2%' }}> Địa điểm lên xe của b.province</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                ))}</ScrollView>
-
-                        }
-                    </View>
+                <ScrollView>
+                        {province.map(p => (
+                            
+                            <TouchableOpacity key={p.id} onPress={()=>{goToHome(p.id)}}>
+                                <View style={styles.Text}>
+                                    <Text style={{ fontSize: 16, fontWeight: 600, marginTop: '5%', marginLeft: '2%' }}>{p.name}</Text>
+                                    <Text style={{ marginBottom: 8, marginTop: 5, color: '#696969', marginLeft: '2%' }}> Tất cả các địa điểm lên xe của {p.name}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        ))}
+                   </ScrollView>
                 </View>
             </View>
         </View>
-
-
-
-
+    }</>
     )
 }
 

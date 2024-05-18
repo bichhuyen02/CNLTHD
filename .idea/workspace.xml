@@ -10,18 +10,12 @@
       <change beforePath="$PROJECT_DIR$/SellTicket/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/android/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SellTicket/android/app/src/main/java/com/sellticket/MainApplication.kt" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/android/app/src/main/java/com/sellticket/MainApplication.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SellTicket/android/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/android/settings.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SellTicket/components/Complain/Reposes.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/components/Complain/Reposes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SellTicket/components/History/HistoryOrder.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/components/History/HistoryOrder.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SellTicket/components/Home/Welcome.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/components/Home/Welcome.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SellTicket/components/Ticket/Pay.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SellTicket/components/User/Register.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/components/User/Register.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SellTicket/components/User/Signin.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/components/User/Signin.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SellTicket/config/Apis.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/config/Apis.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SellTicket/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SellTicket/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SellTicket/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/yarn.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ticketCar/myService/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SellTicket/components/Home/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/components/Home/Home.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SellTicket/components/Pay/Pay.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/components/Pay/Pay.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SellTicket/components/Trip/Search.js" beforeDir="false" afterPath="$PROJECT_DIR$/SellTicket/components/Trip/Search.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SellTicket/components/Trip/Trip.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/ticketCar/myService/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/myService/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ticketCar/myService/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/myService/serializers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ticketCar/myService/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketCar/myService/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

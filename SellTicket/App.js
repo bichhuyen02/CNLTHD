@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { useEffect, useReducer, useState } from 'react';
+import React, {useReducer, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Home from './components/Home/Home';
 import Busses from './components/Trip/Busses';
@@ -14,26 +14,12 @@ import Register from './components/User/Register';
 import Reposes from './components/Complain/Reposes';
 import Signin from './components/User/Signin';
 import Welcome from './components/Home/Welcome';
-import Apis, { endpoints } from './config/Apis';
 import MyContext from './config/MyContext';
 import MyUserReducer from './reducer/MyUserReducer';
 import Search from './components/Trip/Search';
 
-const HomeScreen = () => {
-  const [categories, setCategories] = useState([]);
 
-  useEffect(() => {
-    const loadCategory = async () => {
-      const res = await Apis.get(endpoints['categories']);
-      setCategories(res.data)
-    }
-    loadCategory();
-  }, [])
 
-  return <View style={styles.container}>
-    {categories.map(c => <Text key={c.id}>{c.name}</Text>)}
-  </View>
-};
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -88,7 +74,7 @@ export default App = () => {
   return (
     <MyContext.Provider value={[user, dispatch]}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="TrangChu" options={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName="Welcome" options={{ headerShown: false }}>
           <Stack.Screen name="TrangChu" component={TrangChu} options={{ headerShown: false }} />
           <Stack.Screen name="Signin" component={Signin} options={{ headerShown: false }} />
           <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />

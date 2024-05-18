@@ -4,48 +4,56 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { endpoints } from '../../config/Apis';
+import Apis, { endpoints } from '../../config/Apis';
 
 
 
 export default Home = ({route, navigation}) => {
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
-
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowPicker(false);
     setDate(currentDate);
   };
-
+  // console.info(date)
   const showDateTimePicker = () => {
     setShowPicker(true);
   };
 
+  // const dateString = date.toLocaleString().slice(0,10);
+  // console.info(dateString)
+  // const dateParts = dateString.split("/");
+  // const newDate = new Date(
+  //   parseInt(dateParts[2]), // Năm
+  //   parseInt(dateParts[0]) - 1, // Tháng (giảm đi 1 vì tháng trong JavaScript được đánh số từ 0 đến 11)
+  //   parseInt(dateParts[1]) // Ngày
+  // );
+  // console.info(newDate)
   const [seats, setSeats] = useState(1);
 
-  const [pointGo, setPointGo] = useState(null);
-  const [pointUp, setPointUp] = useState(null);
+  const [provinceGo, setprovinceGo] = useState(null);
+  const [provinceUp, setprovinceUp] = useState(null);
 
-  const pointGoId = route.params?.pointGo
-  const pointUpId = route.params?.pointUp
+  const provinceGoId = route.params?.provinceGo
+  const provinceUpId = route.params?.provinceUp
 
   useEffect(() => {
-    const loadPointGo = async () => {
-      if (pointGoId !== undefined && pointGoId !== "") {
-        const res = await Apis.get(endpoints['bStationDetail'](pointGoId));
-        setPointGo(res.data)
+    const loadprovinceGo = async () => {
+      if (route.params) {
+          const res = await Apis.get(endpoints['provinceDetail'](route.params.provinceGo));
+          setprovinceGo(res.data);
       }
     }
-    const loadPointUp = async () => {
-      if (pointUpId !== undefined && pointUpId !== "") {
-        const res = await Apis.get(endpoints['bStationDetail'](pointUpId));
-        setPointUp(res.data)
-      }
+    const loadprovinceUp = async () => {
+      if (route.params) {
+          const res = await Apis.get( endpoints['provinceDetail'](route.params.provinceUp));
+          setprovinceUp(res.data);
+        }
     }
-    loadPointGo()
-    loadPointUp();
-  }, [pointUpId]);
+    loadprovinceGo()
+    loadprovinceUp();
+  },[provinceUpId, provinceGoId]);
 
   const handleSeatChange = (value) => {
     setSeats(value);
@@ -64,10 +72,18 @@ export default Home = ({route, navigation}) => {
 ];
 
 const goToSearch = (index) => {
-  navigation.navigate("Search", {"index": index})
+  if(index===1){
+    navigation.navigate("Search", {"index": index})
+  }
+  if(index===2&&provinceGoId!==null){
+    navigation.navigate("Search", {"index": index, "provinceGo": provinceGoId})
+  }
 }
-
-
+const goToBuses = () => {
+  if(provinceGo!==null && provinceUp!==null){
+    navigation.navigate("Busses", {'provinceGo': provinceGoId, 'provinceUp': provinceUpId, 'date': date, 'seat': seats})
+  }
+}
   return(
         <View style={{flex:1}}>
          <StatusBar barStyle="light-content" />
@@ -76,18 +92,17 @@ const goToSearch = (index) => {
           <View style={{padding: 10, paddingTop: 15}}>
             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
             
-            <Text style={{color: 'white', fontSize: 20, fontWeight: '700'}}>BUS APP 5 SAO - TIỆN ÍCH ĐỈNH CAO</Text>
+            <Text style={{color: 'white', fontSize: 17, fontWeight: '700'}}>BUS APP 5 SAO - TIỆN ÍCH ĐỈNH CAO</Text>
             </View>
           </View>
         </View>
         {/* #F0F0F0 */}
         <View style={{flex: 8, backgroundColor: '#F0F0F0'}}>
+      
         </View>
         
-
         <View style={styles.ItemSreach}>
           <View  style={{width:'95%', height:'95%'}}>
-
             <View style={{margin:10}}>
               <Text style={{fontSize: 18}}>Từ</Text>
               <View style={{flexDirection: 'row'}}>
@@ -95,9 +110,9 @@ const goToSearch = (index) => {
                 <TouchableOpacity
                   style={styles.InputText}
                   onPress={()=>goToSearch(1)}>
-                  {pointGo===null?<Text style={{ color: '#808080' }} >Thành phố, khu vực, điểm lên xe</Text>:
-                  <Text style={{ color: '#808080' }} >{pointGo.name}</Text>}
-                </TouchableOpacity>
+                  {provinceGo===null?<Text style={{ color: '#808080' }} >Thành phố, khu vực, điểm lên xe</Text>:
+                  <Text style={{ color: '#808080' }} >{provinceGo.name}</Text>}
+                   </TouchableOpacity>
               </View>
             </View>
 
@@ -108,8 +123,8 @@ const goToSearch = (index) => {
                 <TouchableOpacity
                   style={styles.InputText}
                   onPress={()=>goToSearch(2)}>
-                   {pointUp===null?<Text style={{ color: '#808080' }} >Thành phố, khu vực, điểm lên xe</Text>:
-                  <Text style={{ color: '#808080' }} >{pointUp.name}</Text>}
+                  {provinceUp===null?<Text style={{ color: '#808080' }} >Thành phố, khu vực, điểm lên xe</Text>:
+                  <Text style={{ color: '#808080' }} >{provinceUp.name}</Text>}
                 </TouchableOpacity>
               </View>
             </View>
@@ -155,12 +170,13 @@ const goToSearch = (index) => {
             </View>
 
 
-            <TouchableOpacity  style={styles.buttonSreach} onPress={() => navigation.navigate("Busses", {'pointGo': pointGoId, 'pointUp': pointUpId, 'date': date, 'seat': seats})}>
+            <TouchableOpacity  style={styles.buttonSreach} onPress={()=>{goToBuses()}}>
               <Text style={{fontSize: 20, color: 'white', textAlign: 'center', fontWeight: '600'}}>Tìm kiếm</Text>
             </TouchableOpacity>
           </View>
         
       </View>
+
       </View>
   )
 }
@@ -196,7 +212,16 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     width: '90%'
   },
-
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    // marginTop: 2,
+    // borderWidth: 1,
+    //borderRadius: 5,
+    paddingHorizontal: 10,
+    borderColor: '#C0C0C0',
+    borderBottomWidth: 1,
+  },
   placeholder: {
     position: 'absolute',
     top: 20,

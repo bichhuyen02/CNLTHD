@@ -2,67 +2,32 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, ScrollView, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign, Feather } from '@expo/vector-icons'; // Import icon từ thư viện Expo
-import * as ImagePicker from 'expo-image-picker';
 import Apis, { endpoints } from '../../config/Apis';
 
 
 const Register = () => {
 
-  const [user, setUser] = useState({
-    'last_name': "",
-    'email': "",
-    'phone': "",
-    'username': "",
-    'password': "",
-    'cofim_password': "",
-    'avatar': ""
-  });
+  const [last_name, setLast_name] = useState(null)
+  const [email, setEmail] = useState(null)
+  const [phone, setPhone] = useState(null)
+  const [username, setUsername] = useState(null)
+  const [password, setPass] = useState(null)
+  const [cofim_password, setConf] = useState(null)
 
   const [loading, setLoading] = useState();
 
-  const change = (field, value) => {
-    setUser(current => {
-      return { ...current, [field]: value }
-    })
-  }
-
-  const picker = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      alert("Permission denied!");
-    } else {
-      const res = await ImagePicker.launchImageLibraryAsync();
-      if (!res.canceled) {
-        change('avatar', res.assets[0]);
-      }
-    }
-  }
 
   const handleRegister = async () => {
     setLoading(true);
 
     try {
-      if (user.password === user.cofim_password) {
-
-        let form = new FormData();
-
-        for (key in user) {
-
-          if (key === 'avatar') {
-
-            form.append(key, {
-              uri: user[key].uri,
-              name: user[key].fileName,
-              type: user[key].type
-            })
-          } else
-            form.append(key, user[key]);
-        }
-        console.info(user.avatar)
-        const res = await Apis.post(endpoints['register'], form, {
-          headers: {
-            "Content-Type": 'multipart/formdata'
-          }
+      if (password === cofim_password) {
+        const res = await Apis.post(endpoints['register'], {
+          "last_name": last_name,
+          "email": email, 
+          "phone": phone,
+          "username": username,
+          "password": password
         })
         console.info(res.data);
       }
@@ -88,7 +53,7 @@ const Register = () => {
               style={styles.inputText}
               placeholder="Họ tên"
               placeholderTextColor="#fff"
-              onChangeText={t=>change('last_name',t)}
+              onChangeText={(t)=>{setLast_name(t)}}
             />
           </View>
           {/* sdt */}
@@ -98,7 +63,7 @@ const Register = () => {
               style={styles.inputText}
               placeholder="SĐT"
               placeholderTextColor="#fff"
-              onChangeText={t=>change('phone',t)}
+              onChangeText={(t)=>{setPhone(t)}}
             />
           </View>
           {/* mail */}
@@ -108,7 +73,7 @@ const Register = () => {
               style={styles.inputText}
               placeholder="Email"
               placeholderTextColor="#fff"
-              onChangeText={t=>change('email',t)}
+              onChangeText={(t)=>{setEmail(t)}}
             />
           </View> 
           {/* username  */}
@@ -118,7 +83,7 @@ const Register = () => {
               style={styles.inputText}
               placeholder="Tên đăng nhập"
               placeholderTextColor="#fff"
-              onChangeText={t=>change('username',t)}
+              onChangeText={(t)=>{setUsername(t)}}
             />
           </View>
           {/* pass  */}
@@ -129,7 +94,7 @@ const Register = () => {
               placeholder="Mật khẩu"
               placeholderTextColor="#fff"
               secureTextEntry={true}
-              onChangeText={t=>change('password',t)}
+              onChangeText={(t)=>{setPass(t)}}
             />
           </View>
           {/* comfi */}
@@ -140,17 +105,10 @@ const Register = () => {
               placeholder="Nhập lại mật khẩu"
               placeholderTextColor="#fff"
               secureTextEntry={true}
-              onChangeText={t=>change('cofim_password',t)}
+              onChangeText={(t)=>{setConf(t)}}
             />
           </View>
-          {/* ava  */}
-          <TouchableOpacity style={styles.inputView} onPress={picker}>
-            <Feather name="file" size={24} color="#fff" style={styles.icon} />
-            <Text style={[styles.inputText, { marginTop: 30 }]}>Tải ảnh đại diện</Text>
-          </TouchableOpacity>
 
-          {user.avatar!==""?<Image source={{uri: user.avatar.uri}} style={{width: 100, height: 100, margin: 10}}>
-          </Image>:""}
           {/* but  */}
           <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
             <Text style={styles.registerButtonText}>Đăng ký</Text>

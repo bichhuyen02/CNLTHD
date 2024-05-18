@@ -144,4 +144,4 @@ const styles = StyleSheet.create({
         width: '53%',
         padding: 5
     }
-})
+});

@@ -25,7 +25,7 @@ role_sl = sorted([(item, item) for item in role_sls])
 #account
 class User(AbstractUser):
     phone = models.CharField(max_length=10, null=True, unique=True)
-    avatar = models.CharField(max_length=255, blank=True)
+    avatar = models.CharField(max_length=255, blank=True, default="https://firebasestorage.googleapis.com/v0/b/ticket-20c1a.appspot.com/o/ava%2Fvodien.jpg?alt=media")
     role = models.CharField(choices=role_choices, max_length=20, default="Customer")
 class Staff(models.Model):
     birth = models.DateField(default=current_date)

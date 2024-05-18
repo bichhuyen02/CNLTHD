@@ -10,7 +10,7 @@ import com.facebook.react.ReactNativeHost
 import com.facebook.react.ReactPackage
 import com.facebook.react.ReactHost
 import com.facebook.react.config.ReactFeatureFlags
-import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load
+import com.facebook.react.defaults.DefaultNewArchitectureEntryprovince.load
 import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.flipper.ReactNativeFlipper
@@ -18,8 +18,6 @@ import com.facebook.soloader.SoLoader
 
 import expo.modules.ApplicationLifecycleDispatcher
 import expo.modules.ReactNativeHostWrapper
-
-import com.reactlibrary.RNMomosdkPackage;
 
 class MainApplication : Application(), ReactApplication {
 
@@ -29,7 +27,6 @@ class MainApplication : Application(), ReactApplication {
           override fun getPackages(): List<ReactPackage> {
             // Packages that cannot be autolinked yet can be added manually here, for example:
             // packages.add(new MyReactNativePackage());
-            packages.add(new RNMomosdkPackage());
             return PackageList(this).packages
           }
 
@@ -52,7 +49,7 @@ class MainApplication : Application(), ReactApplication {
       ReactFeatureFlags.unstable_useRuntimeSchedulerAlways = false
     }
     if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
-      // If you opted-in for the New Architecture, we load the native entry point for this app.
+      // If you opted-in for the New Architecture, we load the native entry province for this app.
       load()
     }
     if (BuildConfig.DEBUG) {
